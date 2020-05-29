@@ -3,8 +3,7 @@
 ```
 usage: pdbsumup.py [-h] --pdb PDB [--select SELECT]
 
-Get a sum up for a Protein structure file (e.g. pdb file) -- Example usage:
-./pdbsumup.py --pdb data/4ci0.pdb
+Get a sum up for a Protein structure file (e.g. pdb file)
 
 optional arguments:
   -h, --help       show this help message and exit
