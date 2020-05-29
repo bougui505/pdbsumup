@@ -33,7 +33,7 @@ nres_per_chain = []
 natoms_per_chain = []
 for chain in chains:
     ruler()
-    seq = cmd.get_fastastr(f'inpdb and chain {chain}')
+    seq = cmd.get_fastastr(f'inpdb and chain {chain} and polymer.protein')
     seqs.append(seq)
     nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
     natoms = cmd.select(f'inpdb and chain {chain}')
