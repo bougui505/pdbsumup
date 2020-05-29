@@ -13,6 +13,8 @@ from pymol import cmd
 parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
 parser.add_argument('--pdb', type=str, help='Protein structure file',
                     required=True)
+parser.add_argument('--select', type=str, help='Select part of the structure',
+                    required=False, default='all')
 args = parser.parse_args()
 
 PDBFILENAME = args.pdb
@@ -32,6 +34,7 @@ def md5sum(inp):
 
 
 cmd.load(PDBFILENAME, 'inpdb')
+cmd.remove(f'not (inpdb and {args.select})')
 chains = cmd.get_chains('inpdb')
 seqs = []
 nres_per_chain = []
