@@ -5,12 +5,17 @@
 # https://research.pasteur.fr/en/member/guillaume-bouvier/
 # 2020-05-29 14:37:24 (UTC+0200)
 
-import sys
+import argparse
 import hashlib
 import numpy
 from pymol import cmd
 
-PDBFILENAME = sys.argv[1]
+parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
+parser.add_argument('--pdb', type=str, help='Protein structure file',
+                    required=True)
+args = parser.parse_args()
+
+PDBFILENAME = args.pdb
 
 
 def ruler(char='-', length=32):
