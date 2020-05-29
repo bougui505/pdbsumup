@@ -4,6 +4,8 @@ Usage:
 
 ```
 $ ./pdbsumup.py data/4ci0.pdb
+```
+```
  PyMOL not running, entering library mode (experimental)
 --------------------------------
 chain A
