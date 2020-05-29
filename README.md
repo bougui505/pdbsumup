@@ -1,6 +1,7 @@
 # pdbsumup
-
 ```
+$ ./pdbsumup.py -h
+
 usage: pdbsumup.py [-h] --pdb PDB [--select SELECT]
 
 Get a sum up for a Protein structure file (e.g. pdb file)
@@ -10,8 +11,9 @@ optional arguments:
   --pdb PDB        Protein structure file
   --select SELECT  Select part of the structure
 ```
-Example output:
 ```
+$ ./pdbsumup.py --pdb data/4ci0.pdb
+
  PyMOL not running, entering library mode (experimental)
 --------------------------------
 chain A
