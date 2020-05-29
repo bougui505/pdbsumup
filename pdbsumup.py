@@ -6,6 +6,7 @@
 # 2020-05-29 14:37:24 (UTC+0200)
 
 import sys
+import hashlib
 import numpy
 from pymol import cmd
 
@@ -14,6 +15,15 @@ PDBFILENAME = sys.argv[1]
 
 def ruler(char='-', length=32):
     print(char * length)
+
+
+def md5sum(inp):
+    inp = numpy.asarray(inp)
+    inp = inp.flatten()
+    instr = [str(e) for e in inp]
+    instr = ''.join(instr)
+    instr = instr.encode('utf-8')
+    return hashlib.sha224(instr).hexdigest()
 
 
 cmd.load(PDBFILENAME, 'inpdb')
@@ -32,6 +42,7 @@ for chain in chains:
     print(f'chain {chain}')
     print(f'number or residues:\t{nres}')
     print(f'number or atoms:\t{natoms}')
+    print(f'Sequence hash: {md5sum(seq)}')
 ruler('#', length=64)
 nres_per_chain = numpy.asarray(nres_per_chain)
 natoms_per_chain = numpy.asarray(natoms_per_chain)
