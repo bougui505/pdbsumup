@@ -46,6 +46,6 @@ for chain in chains:
 ruler('#', length=64)
 nres_per_chain = numpy.asarray(nres_per_chain)
 natoms_per_chain = numpy.asarray(natoms_per_chain)
-print(f'Total number of chain:\t\t{len(chains)}')
+print(f'Total number of chains:\t\t{len(chains)}')
 print(f'Total number of residues:\t{nres_per_chain.sum()}')
 print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
