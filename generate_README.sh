@@ -19,4 +19,4 @@ EOF
 
 runcmd "./pdbsumup.py -h"
 runcmd "./pdbsumup.py --pdb data/4ci0.pdb"
-
+runcmd "./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A+B'"
