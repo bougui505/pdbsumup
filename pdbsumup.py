@@ -10,7 +10,7 @@ import hashlib
 import numpy
 from pymol import cmd
 
-parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
+parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file) -- Example usage: ./pdbsumup.py --pdb data/4ci0.pdb')
 parser.add_argument('--pdb', type=str, help='Protein structure file',
                     required=True)
 parser.add_argument('--select', type=str, help='Select part of the structure',
