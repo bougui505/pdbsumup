@@ -22,7 +22,7 @@ chain C
 number or residues:	280
 number or atoms:	2206
 Sequence hash: d11457e2bcc622c0142d32f4b8a389788e77c9a37d842b42508688f9
-################################################################
+################################################################################
 Total number of chains:		3
 Total number of residues:	893
 Total number of atoms:		6956
