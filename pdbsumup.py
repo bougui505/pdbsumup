@@ -48,7 +48,7 @@ for chain in chains:
     print(f'number or residues:\t{nres}')
     print(f'number or atoms:\t{natoms}')
     print(f'Sequence hash: {md5sum(seq)}')
-ruler('#', length=64)
+ruler('#', length=80)
 nres_per_chain = numpy.asarray(nres_per_chain)
 natoms_per_chain = numpy.asarray(natoms_per_chain)
 print(f'Total number of chains:\t\t{len(chains)}')
