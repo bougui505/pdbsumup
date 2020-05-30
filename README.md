@@ -19,17 +19,17 @@ $ ./pdbsumup.py --pdb data/4ci0.pdb
 chain A
 number or residues:	385
 number or atoms:	2988
-Sequence hash: be1ab48bbe59179699d6bebe9223b4a92c729bf5e79860ea3594bfc9
+Sequence hash: 9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 --------------------------------
 chain B
 number or residues:	228
 number or atoms:	1762
-Sequence hash: cf1d57745304f8e1454ca70575cfb9bb597638c1fd751e04c4e8e414
+Sequence hash: 4a21f6493a367ce3fe7503f03834158adaf72594d204be86a56bf634
 --------------------------------
 chain C
 number or residues:	280
 number or atoms:	2206
-Sequence hash: d11457e2bcc622c0142d32f4b8a389788e77c9a37d842b42508688f9
+Sequence hash: b3a553385e60b21aeac78c89ab59db25cf6120844e7c8014cd421dc4
 ################################################################################
 Total number of chains:		3
 Total number of residues:	893
@@ -43,12 +43,12 @@ $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A+B'
 chain A
 number or residues:	385
 number or atoms:	2988
-Sequence hash: be1ab48bbe59179699d6bebe9223b4a92c729bf5e79860ea3594bfc9
+Sequence hash: 9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 --------------------------------
 chain B
 number or residues:	228
 number or atoms:	1762
-Sequence hash: cf1d57745304f8e1454ca70575cfb9bb597638c1fd751e04c4e8e414
+Sequence hash: 4a21f6493a367ce3fe7503f03834158adaf72594d204be86a56bf634
 ################################################################################
 Total number of chains:		2
 Total number of residues:	613

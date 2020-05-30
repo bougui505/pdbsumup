@@ -33,6 +33,13 @@ def md5sum(inp):
     return hashlib.sha224(instr).hexdigest()
 
 
+def get_sequence(chain):
+    seq = cmd.get_fastastr(f'inpdb and chain {chain} and polymer.protein')
+    seq = seq.split()[1:]
+    seq = ''.join(seq)
+    return seq
+
+
 cmd.load(PDBFILENAME, 'inpdb')
 cmd.remove(f'not (inpdb and {args.select})')
 chains = cmd.get_chains('inpdb')
@@ -41,7 +48,7 @@ nres_per_chain = []
 natoms_per_chain = []
 for chain in chains:
     ruler()
-    seq = cmd.get_fastastr(f'inpdb and chain {chain} and polymer.protein')
+    seq = get_sequence(chain)
     seqs.append(seq)
     nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
     natoms = cmd.select(f'inpdb and chain {chain}')
