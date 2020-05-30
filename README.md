@@ -17,20 +17,20 @@ $ ./pdbsumup.py --pdb data/4ci0.pdb
  PyMOL not running, entering library mode (experimental)
 --------------------------------
 chain A
-number or residues:	385
-number or atoms:	2988
+number of residues:	385
+number of atoms:	2988
 Sequence hash:	9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 Residue chunks:	2..386
 --------------------------------
 chain B
-number or residues:	228
-number or atoms:	1762
+number of residues:	228
+number of atoms:	1762
 Sequence hash:	4a21f6493a367ce3fe7503f03834158adaf72594d204be86a56bf634
 Residue chunks:	46..273
 --------------------------------
 chain C
-number or residues:	280
-number or atoms:	2206
+number of residues:	280
+number of atoms:	2206
 Sequence hash:	b3a553385e60b21aeac78c89ab59db25cf6120844e7c8014cd421dc4
 Residue chunks:	2..281
 ################################################################################
@@ -44,14 +44,14 @@ $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A+B'
  PyMOL not running, entering library mode (experimental)
 --------------------------------
 chain A
-number or residues:	385
-number or atoms:	2988
+number of residues:	385
+number of atoms:	2988
 Sequence hash:	9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 Residue chunks:	2..386
 --------------------------------
 chain B
-number or residues:	228
-number or atoms:	1762
+number of residues:	228
+number of atoms:	1762
 Sequence hash:	4a21f6493a367ce3fe7503f03834158adaf72594d204be86a56bf634
 Residue chunks:	46..273
 ################################################################################
