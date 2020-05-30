@@ -48,6 +48,30 @@ def get_resids(chain):
     return resids
 
 
+def get_resid_chunks(resids):
+    chunks = {0: [resids[0], ]}
+    inds = numpy.where(numpy.diff(resids) > 1)[0]
+    for i, ind in enumerate(inds):
+        chunks[i].append(resids[ind])
+        chunks[i + 1] = [resids[ind + 1]]
+    keys = list(chunks.keys())
+    keys.sort()
+    chunks[keys[-1]].append(resids[-1])
+    return chunks
+
+
+def print_chunks(chunks):
+    keys = list(chunks.keys())
+    keys.sort()
+    out = ''
+    nchunks = len(keys)
+    for i, k in enumerate(keys):
+        out += f'{chunks[k][0]}..{chunks[k][1]}'
+        if i < nchunks - 1:
+            out += '/'
+    return out
+
+
 cmd.load(PDBFILENAME, 'inpdb')
 cmd.remove(f'not (inpdb and {args.select})')
 chains = cmd.get_chains('inpdb')
@@ -59,6 +83,7 @@ for chain in chains:
     seq = get_sequence(chain)
     seqs.append(seq)
     resids = get_resids(chain)
+    resid_chunks = get_resid_chunks(resids)
     nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
     natoms = cmd.select(f'inpdb and chain {chain}')
     nres_per_chain.append(nres)
@@ -66,7 +91,8 @@ for chain in chains:
     print(f'chain {chain}')
     print(f'number or residues:\t{nres}')
     print(f'number or atoms:\t{natoms}')
-    print(f'Sequence hash: {md5sum(seq)}')
+    print(f'Sequence hash:\t{md5sum(seq)}')
+    print(f'Residue chunks:\t{print_chunks(resid_chunks)}')
 ruler('#', length=80)
 nres_per_chain = numpy.asarray(nres_per_chain)
 natoms_per_chain = numpy.asarray(natoms_per_chain)
