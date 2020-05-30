@@ -40,6 +40,14 @@ def get_sequence(chain):
     return seq
 
 
+def get_resids(chain):
+    myspace = {'resids': []}
+    cmd.iterate(f'inpdb and chain {chain} and polymer.protein',
+                'resids.append(resi)', space=myspace)
+    resids = numpy.int_(myspace['resids'])
+    return resids
+
+
 cmd.load(PDBFILENAME, 'inpdb')
 cmd.remove(f'not (inpdb and {args.select})')
 chains = cmd.get_chains('inpdb')
@@ -50,6 +58,7 @@ for chain in chains:
     ruler()
     seq = get_sequence(chain)
     seqs.append(seq)
+    resids = get_resids(chain)
     nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
     natoms = cmd.select(f'inpdb and chain {chain}')
     nres_per_chain.append(nres)
