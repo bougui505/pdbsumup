@@ -48,6 +48,14 @@ def get_resids(chain):
     return resids
 
 
+def get_atomnames(chain):
+    myspace = {'atomnames': []}
+    cmd.iterate(f'inpdb and chain {chain} and polymer.protein',
+                'atomnames.append(name)', space=myspace)
+    atomnames = myspace['atomnames']
+    return atomnames
+
+
 def get_resid_chunks(resids):
     chunks = {0: [resids[0], ]}
     inds = numpy.where(numpy.diff(resids) > 1)[0]
@@ -84,6 +92,7 @@ for chain in chains:
     seqs.append(seq)
     resids = get_resids(chain)
     resid_chunks = get_resid_chunks(resids)
+    atomnames = get_atomnames(chain)
     nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
     natoms = cmd.select(f'inpdb and chain {chain}')
     nres_per_chain.append(nres)
@@ -91,8 +100,9 @@ for chain in chains:
     print(f'chain {chain}')
     print(f'number of residues:\t{nres}')
     print(f'number of atoms:\t{natoms}')
-    print(f'Sequence hash:\t{md5sum(seq)}')
-    print(f'Residue chunks:\t{print_chunks(resid_chunks)}')
+    print(f'Sequence hash:\t\t{md5sum(seq)}')
+    print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
+    print(f'Atom names hash:\t{md5sum(atomnames)}')
 ruler('#', length=80)
 nres_per_chain = numpy.asarray(nres_per_chain)
 natoms_per_chain = numpy.asarray(natoms_per_chain)
