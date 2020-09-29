@@ -80,6 +80,18 @@ def print_chunks(chunks):
     return out
 
 
+def print_pymol_selection(chain, chunks):
+    keys = list(chunks.keys())
+    keys.sort()
+    out = f'chain {chain} and resi '
+    nchunks = len(keys)
+    for i, k in enumerate(keys):
+        out += f'{chunks[k][0]}-{chunks[k][1]}'
+        if i < nchunks - 1:
+            out += '+'
+    return out
+
+
 cmd.load(PDBFILENAME, 'inpdb')
 cmd.remove(f'not (inpdb and {args.select})')
 chains = cmd.get_chains('inpdb')
@@ -103,6 +115,7 @@ for chain in chains:
     print(f'Sequence hash:\t\t{md5sum(seq)}')
     print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
     print(f'Atom names hash:\t{md5sum(atomnames)}')
+    print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
 ruler('#', length=80)
 nres_per_chain = numpy.asarray(nres_per_chain)
 natoms_per_chain = numpy.asarray(natoms_per_chain)
