@@ -112,6 +112,7 @@ for chain in chains:
     print(f'chain {chain}')
     print(f'number of residues:\t{nres}')
     print(f'number of atoms:\t{natoms}')
+    print(f'Sequence:\t\t{seq}')
     print(f'Sequence hash:\t\t{md5sum(seq)}')
     print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
     print(f'Atom names hash:\t{md5sum(atomnames)}')
