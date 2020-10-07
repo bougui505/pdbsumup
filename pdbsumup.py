@@ -87,7 +87,6 @@ def print_sequence(sequence, chunks):
     start = 0
     for chunk_id in chunk_ids:
         chunk = chunks[chunk_id]
-        print(chunk)
         chunk_len = chunk[1] - chunk[0] + 1
         seq_string += sequence[start:start + chunk_len]
         start = chunk_len
