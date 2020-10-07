@@ -80,6 +80,21 @@ def print_chunks(chunks):
     return out
 
 
+def print_sequence(sequence, chunks):
+    seq_string = ''
+    chunk_ids = list(chunks.keys())
+    chunk_ids.sort()
+    start = 0
+    for chunk_id in chunk_ids:
+        chunk = chunks[chunk_id]
+        print(chunk)
+        chunk_len = chunk[1] - chunk[0] + 1
+        seq_string += sequence[start:start + chunk_len]
+        start = chunk_len
+        seq_string += '/'
+    return seq_string
+
+
 def print_pymol_selection(chain, chunks):
     keys = list(chunks.keys())
     keys.sort()
@@ -112,7 +127,7 @@ for chain in chains:
     print(f'chain {chain}')
     print(f'number of residues:\t{nres}')
     print(f'number of atoms:\t{natoms}')
-    print(f'Sequence:\t\t{seq}')
+    print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
     print(f'Sequence hash:\t\t{md5sum(seq)}')
     print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
     print(f'Atom names hash:\t{md5sum(atomnames)}')
