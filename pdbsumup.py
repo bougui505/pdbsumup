@@ -10,15 +10,6 @@ import hashlib
 import numpy
 from pymol import cmd
 
-parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
-parser.add_argument('--pdb', type=str, help='Protein structure file',
-                    required=True)
-parser.add_argument('--select', type=str, help='Select part of the structure',
-                    required=False, default='all')
-args = parser.parse_args()
-
-PDBFILENAME = args.pdb
-
 
 def ruler(char='-', length=32):
     print(char * length)
@@ -106,37 +97,48 @@ def print_pymol_selection(chain, chunks):
     return out
 
 
-cmd.load(PDBFILENAME, 'inpdb')
-cmd.remove(f'not (inpdb and {args.select})')
-chains = cmd.get_chains('inpdb')
-seqs = []
-nres_per_chain = []
-natoms_per_chain = []
-for chain in chains:
-    ruler()
-    seq = get_sequence(chain)
-    seqs.append(seq)
-    resids = get_resids(chain)
-    resid_chunks = get_resid_chunks(resids)
-    atomnames = get_atomnames(chain)
-    nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
-    natoms = cmd.select(f'inpdb and chain {chain}')
-    nres_per_chain.append(nres)
-    natoms_per_chain.append(natoms)
-    print(f'chain {chain}')
-    print(f'number of residues:\t{nres}')
-    print(f'number of atoms:\t{natoms}')
-    print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
-    print(f'Sequence hash:\t\t{md5sum(seq)}')
-    print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
-    print(f'Atom names hash:\t{md5sum(atomnames)}')
-    print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
-ruler('#', length=80)
-nres_per_chain = numpy.asarray(nres_per_chain)
-natoms_per_chain = numpy.asarray(natoms_per_chain)
-print(f'Total number of chains:\t\t{len(chains)}')
-print(f'Total number of residues:\t{nres_per_chain.sum()}')
-print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
-coords = cmd.get_coords('inpdb')
-print(f"Coords min:\t\t\t{' '.join([str(e) for e in coords.min(axis=0)])}")
-print(f"Coords max:\t\t\t{' '.join([str(e) for e in coords.max(axis=0)])}")
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
+    parser.add_argument('--pdb', type=str, help='Protein structure file',
+                        required=True)
+    parser.add_argument('--select', type=str, help='Select part of the structure',
+                        required=False, default='all')
+    args = parser.parse_args()
+
+    PDBFILENAME = args.pdb
+
+    cmd.load(PDBFILENAME, 'inpdb')
+    cmd.remove(f'not (inpdb and {args.select})')
+    chains = cmd.get_chains('inpdb')
+    seqs = []
+    nres_per_chain = []
+    natoms_per_chain = []
+    for chain in chains:
+        ruler()
+        seq = get_sequence(chain)
+        seqs.append(seq)
+        resids = get_resids(chain)
+        resid_chunks = get_resid_chunks(resids)
+        atomnames = get_atomnames(chain)
+        nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
+        natoms = cmd.select(f'inpdb and chain {chain}')
+        nres_per_chain.append(nres)
+        natoms_per_chain.append(natoms)
+        print(f'chain {chain}')
+        print(f'number of residues:\t{nres}')
+        print(f'number of atoms:\t{natoms}')
+        print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
+        print(f'Sequence hash:\t\t{md5sum(seq)}')
+        print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
+        print(f'Atom names hash:\t{md5sum(atomnames)}')
+        print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
+    ruler('#', length=80)
+    nres_per_chain = numpy.asarray(nres_per_chain)
+    natoms_per_chain = numpy.asarray(natoms_per_chain)
+    print(f'Total number of chains:\t\t{len(chains)}')
+    print(f'Total number of residues:\t{nres_per_chain.sum()}')
+    print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
+    coords = cmd.get_coords('inpdb')
+    print(f"Coords min:\t\t\t{' '.join([str(e) for e in coords.min(axis=0)])}")
+    print(f"Coords max:\t\t\t{' '.join([str(e) for e in coords.max(axis=0)])}")
