@@ -277,7 +277,7 @@ if __name__ == '__main__':
     ruler('#', length=80)
     nres_per_chain = numpy.asarray(nres_per_chain)
     natoms_per_chain = numpy.asarray(natoms_per_chain)
-    print(f'Total number of chains:\t\t{len(chains)}')
+    print(f'Total number of chains:\t\t{len(chains)} ({"".join(chains)})')
     print(f'Symmetry:\t\t\t{get_chain_seqmatch(seqhashes, chains)}')
     print(f'Total number of residues:\t{nres_per_chain.sum()}')
     print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
