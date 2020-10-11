@@ -128,6 +128,12 @@ def print_resid_seq(sequence, resids, linewidth=80):
         if i % 10 == 0:
             outres += '{:10s}'.format('%d' % r)
             outres = outres.replace(' ', '.')
+    rp = None
+    for i, r in enumerate(resids):
+        if rp is not None:
+            if r - rp > 1:
+                outres = outres[:i] + '/' + outres[i + 1:]
+        rp = r
     outseq = textwrap.wrap(outseq, linewidth)
     outres = textwrap.wrap(outres, linewidth)
     outstr = ''
