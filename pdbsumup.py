@@ -99,8 +99,11 @@ def print_pymol_selection(chain, chunks):
 
 def print_resids(resids):
     outstr = ''
+    rp = -1
     for r in resids:
-        outstr += '%d ' % r
+        if r != rp:
+            outstr += '%d ' % r
+        rp = r
     return outstr
 
 
@@ -143,7 +146,7 @@ if __name__ == '__main__':
             print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
         print(f'Sequence hash:\t\t{md5sum(seq)}')
         if args.resids:
-            print(f'Resids:\t\t{print_resids(resids)}')
+            print(f'Resids:\t\t\t{print_resids(resids)}')
         print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
         print(f'Atom names hash:\t{md5sum(atomnames)}')
         print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
