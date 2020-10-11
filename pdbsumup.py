@@ -125,8 +125,8 @@ def print_resid_seq(sequence, resids, linewidth=80):
     outres = ''
     for i, (s, r) in enumerate(zip(sequence, resids)):
         outseq += s
-        if i % 10 == 0:
-            outres += '{:10s}'.format('%d' % r)
+        if i % 5 == 0:
+            outres += '{:5s}'.format('%d' % r)
             outres = outres.replace(' ', '.')
     rp = None
     for i, r in enumerate(resids):
