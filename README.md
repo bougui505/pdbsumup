@@ -195,8 +195,8 @@ Pymol selection string:	chain W and resi 1-25
 ################################################################################
 Total number of chains:		5 (EFGHW)
 Symmetry:			F=H (RMSD=1.69Å, θx=173.85°, θy=-0.20°, θz=-86.78°, tx=357.94Å, ty=319.33Å, tz=363.43Å) 
-				G=W (RMSD=0.95Å, θx=-131.46°, θy=-41.19°, θz=-97.49°, tx=315.93Å, ty=422.42Å, tz=243.46Å) 
-				
+|				G=W (RMSD=0.95Å, θx=-131.46°, θy=-41.19°, θz=-97.49°, tx=315.93Å, ty=422.42Å, tz=243.46Å) 
+|				
 Total number of residues:	1072
 Total number of atoms:		8578
 Coords min:			81.228 134.165 110.565

@@ -218,7 +218,7 @@ def get_chain_seqmatch(seqhashes, chains):
                 A = cmd.get_coords(f'inpdb and chain {c} and name CA')
                 R, t, rmsd, theta_x, theta_y, theta_z = find_rigid_alignment(A, B)
                 outstr += f'={c} (RMSD={rmsd:.2f}Å, θx={theta_x:.2f}°, θy={theta_y:.2f}°, θz={theta_z:.2f}°, tx={t[0]:.2f}Å, ty={t[1]:.2f}Å, tz={t[2]:.2f}Å) '
-                outstr += '\n\t\t\t\t'
+                outstr += '\n|\t\t\t\t'
     if outstr == '':
         outstr = 'No symmetry'
     return outstr
