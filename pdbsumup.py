@@ -147,6 +147,56 @@ def print_resid_seq(sequence, resids, linewidth=80):
     return outstr
 
 
+def find_rigid_alignment(A, B):
+    """
+    See: https://en.wikipedia.org/wiki/Kabsch_algorithm
+    2-D or 3-D registration with known correspondences.
+    Registration occurs in the zero centered coordinate system, and then
+    must be transported back.
+        Args:
+        -    A: Numpy array of shape (N,D) -- Point Cloud to Align (source)
+        -    B: Numpy array of shape (N,D) -- Reference Point Cloud (target)
+        Returns:
+        -    R: optimal rotation
+        -    t: optimal translation
+    Test on rotation + translation and on rotation + translation + reflection
+        >>> A = np.asarray([[1., 1.], [2., 2.], [1.5, 3.]])
+        >>> R0 = np.asarray([[np.cos(60), -np.sin(60)], [np.sin(60), np.cos(60)]])
+        >>> B = (R0.dot(A.T)).T
+        >>> t0 = np.array([3., 3.])
+        >>> B += t0
+        >>> B.shape
+        (3, 2)
+        >>> R, t = find_rigid_alignment(A, B)
+        >>> A_aligned = (R.dot(A.T)).T + t
+        >>> rmsd = np.sqrt(((A_aligned - B)**2).sum(axis=1).mean())
+        >>> rmsd
+        2.5639502485114184e-16
+        >>> B *= np.array([-1., 1.])
+        >>> R, t = find_rigid_alignment(A, B)
+        >>> A_aligned = (R.dot(A.T)).T + t
+        >>> rmsd = np.sqrt(((A_aligned - B)**2).sum(axis=1).mean())
+        >>> rmsd
+        2.5639502485114184e-16
+    """
+    a_mean = A.mean(axis=0)
+    b_mean = B.mean(axis=0)
+    A_c = A - a_mean
+    B_c = B - b_mean
+    # Covariance matrix
+    H = A_c.T.dot(B_c)
+    U, S, Vt = numpy.linalg.svd(H)
+    V = Vt.T
+    # Rotation matrix
+    R = V.dot(U.T)
+    # Translation vector
+    t = b_mean - R.dot(a_mean)
+    # rmsd
+    A_aligned = (R.dot(A.T)).T + t
+    rmsd = numpy.sqrt(((A_aligned - B)**2).sum(axis=1).mean())
+    return R, t, rmsd
+
+
 def get_chain_seqmatch(seqhashes, chains):
     """
     Return exact sequence match for chains
@@ -159,8 +209,11 @@ def get_chain_seqmatch(seqhashes, chains):
         chains = seqmatch[h]
         outstr += chains[0]
         if len(chains) > 1:
+            B = cmd.get_coords(f'inpdb and chain {chains[0]} and name CA')
             for c in chains[1:]:
-                outstr += f'={c}'
+                A = cmd.get_coords(f'inpdb and chain {c} and name CA')
+                R, t, rmsd = find_rigid_alignment(A, B)
+                outstr += f'={c} ({rmsd:.3f} Å)'
         outstr += ' ; '
     return outstr
 
