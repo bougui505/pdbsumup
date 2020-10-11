@@ -5,6 +5,7 @@
 # https://research.pasteur.fr/en/member/guillaume-bouvier/
 # 2020-05-29 14:37:24 (UTC+0200)
 
+import textwrap
 import argparse
 import hashlib
 import numpy
@@ -97,13 +98,44 @@ def print_pymol_selection(chain, chunks):
     return out
 
 
-def print_resids(resids):
-    outstr = ''
-    rp = -1
+def get_unique_resids(resids):
+    resids_unique = []
+    rp = None
     for r in resids:
         if r != rp:
-            outstr += '%d ' % r
+            resids_unique.append(r)
         rp = r
+    return resids_unique
+
+
+def print_resids(resids):
+    outstr = ''
+    resids = get_unique_resids(resids)
+    for r in resids:
+        outstr += '%d ' % r
+    return outstr
+
+
+def print_resid_seq(sequence, resids, linewidth=80):
+    """
+    Print the sequence along with residue id markers
+    """
+    resids = get_unique_resids(resids)
+    outseq = ''
+    outres = ''
+    for i, (s, r) in enumerate(zip(sequence, resids)):
+        outseq += s
+        if i % 10 == 0:
+            outres += '{:10s}'.format('%d' % r)
+            outres = outres.replace(' ', '.')
+    outseq = textwrap.wrap(outseq, linewidth)
+    outres = textwrap.wrap(outres, linewidth)
+    outstr = ''
+    for lineres, lineseq in zip(outres, outseq):
+        outstr += lineres
+        outstr += '\n'
+        outstr += lineseq
+        outstr += '\n'
     return outstr
 
 
@@ -117,6 +149,8 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--seq', help='Print the sequence',
                         action='store_true', default=False)
     parser.add_argument('-r', '--resids', help='Print the residue ids',
+                        action='store_true', default=False)
+    parser.add_argument('-sr', '--seqres', help='Print the sequence along with the residue ids',
                         action='store_true', default=False)
     args = parser.parse_args()
 
@@ -150,6 +184,8 @@ if __name__ == '__main__':
         print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
         print(f'Atom names hash:\t{md5sum(atomnames)}')
         print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
+        if args.seqres:
+            print(f'Sequence:\n{print_resid_seq(seq, resids)}')
     ruler('#', length=80)
     nres_per_chain = numpy.asarray(nres_per_chain)
     natoms_per_chain = numpy.asarray(natoms_per_chain)
