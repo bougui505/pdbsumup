@@ -219,6 +219,8 @@ def get_chain_seqmatch(seqhashes, chains):
                 R, t, rmsd, theta_x, theta_y, theta_z = find_rigid_alignment(A, B)
                 outstr += f'={c} (RMSD={rmsd:.2f}Å, θx={theta_x:.2f}°, θy={theta_y:.2f}°, θz={theta_z:.2f}°, tx={t[0]:.2f}Å, ty={t[1]:.2f}Å, tz={t[2]:.2f}Å)'
             outstr += '\n\t\t\t\t'
+    if outstr == '':
+        outstr = 'No symmetry'
     return outstr
 
 
@@ -276,7 +278,7 @@ if __name__ == '__main__':
     nres_per_chain = numpy.asarray(nres_per_chain)
     natoms_per_chain = numpy.asarray(natoms_per_chain)
     print(f'Total number of chains:\t\t{len(chains)}')
-    print(f'Chain sequence match:\t\t{get_chain_seqmatch(seqhashes, chains)}')
+    print(f'Symmetry:\t\t\t{get_chain_seqmatch(seqhashes, chains)}')
     print(f'Total number of residues:\t{nres_per_chain.sum()}')
     print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
     coords = cmd.get_coords('inpdb')
