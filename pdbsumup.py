@@ -104,6 +104,8 @@ if __name__ == '__main__':
                         required=True)
     parser.add_argument('--select', type=str, help='Select part of the structure',
                         required=False, default='all')
+    parser.add_argument('--seq', help='Print the sequence',
+                        action='store_true', default=False)
     args = parser.parse_args()
 
     PDBFILENAME = args.pdb
@@ -128,7 +130,8 @@ if __name__ == '__main__':
         print(f'chain {chain}')
         print(f'number of residues:\t{nres}')
         print(f'number of atoms:\t{natoms}')
-        print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
+        if args.seq:
+            print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
         print(f'Sequence hash:\t\t{md5sum(seq)}')
         print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
         print(f'Atom names hash:\t{md5sum(atomnames)}')
