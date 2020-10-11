@@ -147,6 +147,24 @@ def print_resid_seq(sequence, resids, linewidth=80):
     return outstr
 
 
+def get_chain_seqmatch(seqhashes, chains):
+    """
+    Return exact sequence match for chains
+    """
+    seqmatch = {h: [] for h in seqhashes}
+    for h, c in zip(seqhashes, chains):
+        seqmatch[h].append(c)
+    outstr = ''
+    for h in seqmatch:
+        chains = seqmatch[h]
+        outstr += chains[0]
+        if len(chains) > 1:
+            for c in chains[1:]:
+                outstr += f'={c}'
+        outstr += ' ; '
+    return outstr
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
@@ -170,6 +188,7 @@ if __name__ == '__main__':
     seqs = []
     nres_per_chain = []
     natoms_per_chain = []
+    seqhashes = []
     for chain in chains:
         ruler()
         seq = get_sequence(chain)
@@ -186,7 +205,9 @@ if __name__ == '__main__':
         print(f'number of atoms:\t{natoms}')
         if args.seq:
             print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
-        print(f'Sequence hash:\t\t{md5sum(seq)}')
+        seqhash = md5sum(seq)
+        print(f'Sequence hash:\t\t{seqhash}')
+        seqhashes.append(seqhash)
         if args.resids:
             print(f'Resids:\t\t\t{print_resids(resids)}')
         print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
@@ -198,6 +219,7 @@ if __name__ == '__main__':
     nres_per_chain = numpy.asarray(nres_per_chain)
     natoms_per_chain = numpy.asarray(natoms_per_chain)
     print(f'Total number of chains:\t\t{len(chains)}')
+    print(f'Chain sequence match:\t\t{get_chain_seqmatch(seqhashes, chains)}')
     print(f'Total number of residues:\t{nres_per_chain.sum()}')
     print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
     coords = cmd.get_coords('inpdb')
