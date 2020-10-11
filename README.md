@@ -44,6 +44,7 @@ Atom names hash:	77e11bf0423da1a43dd294621849c68de901ccca51b3d1e72281423f
 Pymol selection string:	chain C and resi 2-281
 ################################################################################
 Total number of chains:		3
+Chain sequence match:		A ; B ; C ; 
 Total number of residues:	893
 Total number of atoms:		6956
 Coords min:			123.557 71.199 61.441
@@ -71,6 +72,7 @@ Atom names hash:	af20fd05b0db3a8d95e60b1c95217b6c2d29cd71efeea627e50bb64d
 Pymol selection string:	chain B and resi 46-273
 ################################################################################
 Total number of chains:		2
+Chain sequence match:		A ; B ; 
 Total number of residues:	613
 Total number of atoms:		4750
 Coords min:			123.557 85.071 61.441
@@ -91,6 +93,7 @@ Atom names hash:	401e196f15ac649d654360a1ed36fd1bd1156cf62ca23fd188f10195
 Pymol selection string:	chain A and resi 2-386
 ################################################################################
 Total number of chains:		1
+Chain sequence match:		A ; 
 Total number of residues:	385
 Total number of atoms:		2988
 Coords min:			123.557 109.164 61.441
@@ -111,6 +114,7 @@ Atom names hash:	401e196f15ac649d654360a1ed36fd1bd1156cf62ca23fd188f10195
 Pymol selection string:	chain A and resi 2-386
 ################################################################################
 Total number of chains:		1
+Chain sequence match:		A ; 
 Total number of residues:	385
 Total number of atoms:		2988
 Coords min:			123.557 109.164 61.441
@@ -142,6 +146,7 @@ Sequence:
 
 ################################################################################
 Total number of chains:		1
+Chain sequence match:		A ; 
 Total number of residues:	385
 Total number of atoms:		2988
 Coords min:			123.557 109.164 61.441
