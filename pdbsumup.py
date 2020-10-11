@@ -97,6 +97,13 @@ def print_pymol_selection(chain, chunks):
     return out
 
 
+def print_resids(resids):
+    outstr = ''
+    for r in resids:
+        outstr += '%d ' % r
+    return outstr
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
@@ -104,7 +111,9 @@ if __name__ == '__main__':
                         required=True)
     parser.add_argument('--select', type=str, help='Select part of the structure',
                         required=False, default='all')
-    parser.add_argument('--seq', help='Print the sequence',
+    parser.add_argument('-s', '--seq', help='Print the sequence',
+                        action='store_true', default=False)
+    parser.add_argument('-r', '--resids', help='Print the residue ids',
                         action='store_true', default=False)
     args = parser.parse_args()
 
@@ -133,6 +142,8 @@ if __name__ == '__main__':
         if args.seq:
             print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
         print(f'Sequence hash:\t\t{md5sum(seq)}')
+        if args.resids:
+            print(f'Resids:\t\t{print_resids(resids)}')
         print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
         print(f'Atom names hash:\t{md5sum(atomnames)}')
         print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
