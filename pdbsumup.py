@@ -138,8 +138,10 @@ def print_resid_seq(sequence, resids, linewidth=80):
     outres = textwrap.wrap(outres, linewidth)
     outstr = ''
     for lineres, lineseq in zip(outres, outseq):
+        outstr += '| '
         outstr += lineres
         outstr += '\n'
+        outstr += '| '
         outstr += lineseq
         outstr += '\n'
     return outstr
