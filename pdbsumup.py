@@ -194,7 +194,11 @@ def find_rigid_alignment(A, B):
     # rmsd
     A_aligned = (R.dot(A.T)).T + t
     rmsd = numpy.sqrt(((A_aligned - B)**2).sum(axis=1).mean())
-    return R, t, rmsd
+    # Get angles:
+    theta_x = numpy.rad2deg(numpy.arctan2(R[2, 1], R[2, 2]))
+    theta_y = numpy.rad2deg(numpy.arctan2(-R[2, 0], numpy.sqrt(R[2, 1]**2 + R[2, 2]**2)))
+    theta_z = numpy.rad2deg(numpy.arctan2(R[1, 0], R[1, 1]))
+    return R, t, rmsd, theta_x, theta_y, theta_z
 
 
 def get_chain_seqmatch(seqhashes, chains):
@@ -207,14 +211,14 @@ def get_chain_seqmatch(seqhashes, chains):
     outstr = ''
     for h in seqmatch:
         chains = seqmatch[h]
-        outstr += chains[0]
         if len(chains) > 1:
+            outstr += chains[0]
             B = cmd.get_coords(f'inpdb and chain {chains[0]} and name CA')
             for c in chains[1:]:
                 A = cmd.get_coords(f'inpdb and chain {c} and name CA')
-                R, t, rmsd = find_rigid_alignment(A, B)
-                outstr += f'={c} ({rmsd:.3f} Å)'
-        outstr += ' ; '
+                R, t, rmsd, theta_x, theta_y, theta_z = find_rigid_alignment(A, B)
+                outstr += f'={c} (RMSD={rmsd:.2f}Å, θx={theta_x:.2f}°, θy={theta_y:.2f}°, θz={theta_z:.2f}°, tx={t[0]:.2f}Å, ty={t[1]:.2f}Å, tz={t[2]:.2f}Å)'
+            outstr += '\n\t\t\t\t'
     return outstr
 
 
