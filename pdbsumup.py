@@ -207,19 +207,20 @@ def get_chain_seqmatch(seqhashes, chains):
     seqmatch = {h: [] for h in seqhashes}
     for h, c in zip(seqhashes, chains):
         seqmatch[h].append(c)
-    outstr = 'Symmetry:\t\t\t'
+    outstr = ''
     for h in seqmatch:
         chains = seqmatch[h]
         if len(chains) > 1:
+            outstr += '\nSymmetry:\t\t\t'
             outstr += chains[0]
             B = cmd.get_coords(f'inpdb and chain {chains[0]} and name CA')
             for c in chains[1:]:
+                outstr += '\nSymmetry:\t\t\t'
                 A = cmd.get_coords(f'inpdb and chain {c} and name CA')
                 R, t, rmsd, theta_x, theta_y, theta_z = find_rigid_alignment(A, B)
                 outstr += f'={c} (RMSD={rmsd:.2f}Å, θx={theta_x:.2f}°, θy={theta_y:.2f}°, θz={theta_z:.2f}°, tx={t[0]:.2f}Å, ty={t[1]:.2f}Å, tz={t[2]:.2f}Å) '
-                outstr += '\nSymmetry:\t\t\t'
     if outstr == '':
-        outstr = 'No symmetry'
+        outstr = 'Symmetry:\t\t\tNo symmetry'
     return outstr
 
 
