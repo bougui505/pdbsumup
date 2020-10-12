@@ -207,7 +207,7 @@ def get_chain_seqmatch(seqhashes, chains):
     seqmatch = {h: [] for h in seqhashes}
     for h, c in zip(seqhashes, chains):
         seqmatch[h].append(c)
-    outstr = ''
+    outstr = 'Symmetry:\t\t\t'
     for h in seqmatch:
         chains = seqmatch[h]
         if len(chains) > 1:
@@ -217,7 +217,7 @@ def get_chain_seqmatch(seqhashes, chains):
                 A = cmd.get_coords(f'inpdb and chain {c} and name CA')
                 R, t, rmsd, theta_x, theta_y, theta_z = find_rigid_alignment(A, B)
                 outstr += f'={c} (RMSD={rmsd:.2f}Å, θx={theta_x:.2f}°, θy={theta_y:.2f}°, θz={theta_z:.2f}°, tx={t[0]:.2f}Å, ty={t[1]:.2f}Å, tz={t[2]:.2f}Å) '
-                outstr += '\n|\t\t\t\t'
+                outstr += '\nSymmetry:\t\t\t'
     if outstr == '':
         outstr = 'No symmetry'
     return outstr
@@ -280,7 +280,7 @@ if __name__ == '__main__':
     natoms_per_chain = numpy.asarray(natoms_per_chain)
     print(f'Total number of chains:\t\t{len(chains)} {",".join(chains)}')
     if args.sym:
-        print(f'Symmetry:\t\t\t{get_chain_seqmatch(seqhashes, chains)}')
+        print(f'{get_chain_seqmatch(seqhashes, chains)}')
     print(f'Total number of residues:\t{nres_per_chain.sum()}')
     print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
     coords = cmd.get_coords('inpdb')
