@@ -111,8 +111,7 @@ def get_unique_resids(resids):
 def print_resids(resids):
     outstr = ''
     resids = get_unique_resids(resids)
-    for r in resids:
-        outstr += '%d ' % r
+    outstr = ';'.join(['%d' % r for r in resids])
     return outstr
 
 
