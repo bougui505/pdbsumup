@@ -265,7 +265,7 @@ if __name__ == '__main__':
         print(f'number of residues:\t{nres}')
         print(f'number of atoms:\t{natoms}')
         if args.seq:
-            print(f'Sequence:\t\t{print_sequence(seq, resid_chunks)}')
+            print(f'Sequence:\t\t{seq}')
         seqhash = md5sum(seq)
         print(f'Sequence hash:\t\t{seqhash}')
         seqhashes.append(seqhash)
