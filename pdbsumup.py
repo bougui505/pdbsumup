@@ -279,30 +279,33 @@ if __name__ == '__main__':
     seqhashes = []
     for chain in chains:
         ruler()
-        seq = get_sequence(chain)
-        seqs.append(seq)
-        resids = get_resids(chain)
-        resid_chunks = get_resid_chunks(resids)
-        atomnames = get_atomnames(chain)
-        nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
-        natoms = cmd.select(f'inpdb and chain {chain}')
-        nres_per_chain.append(nres)
-        natoms_per_chain.append(natoms)
         print(f'chain {chain}')
-        print(f'number of residues:\t{nres}')
-        print(f'number of atoms:\t{natoms}')
-        if args.seq:
-            print(f'Sequence:\t\t{seq}')
-        seqhash = md5sum(seq)
-        print(f'Sequence hash:\t\t{seqhash}')
-        seqhashes.append(seqhash)
-        if args.resids:
-            print(f'Resids:\t\t\t{print_resids(resids)}')
-        print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
-        print(f'Atom names hash:\t{md5sum(atomnames)}')
-        print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
-        if args.seqres:
-            print(f'Sequence:\n{print_resid_seq(seq, resids)}')
+        nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
+        if nres > 0:
+            seq = get_sequence(chain)
+            seqs.append(seq)
+            resids = get_resids(chain)
+            resid_chunks = get_resid_chunks(resids)
+            atomnames = get_atomnames(chain)
+            natoms = cmd.select(f'inpdb and chain {chain}')
+            nres_per_chain.append(nres)
+            natoms_per_chain.append(natoms)
+            print(f'number of residues:\t{nres}')
+            print(f'number of atoms:\t{natoms}')
+            if args.seq:
+                print(f'Sequence:\t\t{seq}')
+            seqhash = md5sum(seq)
+            print(f'Sequence hash:\t\t{seqhash}')
+            seqhashes.append(seqhash)
+            if args.resids:
+                print(f'Resids:\t\t\t{print_resids(resids)}')
+            print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
+            print(f'Atom names hash:\t{md5sum(atomnames)}')
+            print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
+            if args.seqres:
+                print(f'Sequence:\n{print_resid_seq(seq, resids)}')
+        else:
+            print("Not a polypeptide chain")
     ruler('#', length=80)
     nres_per_chain = numpy.asarray(nres_per_chain)
     natoms_per_chain = numpy.asarray(natoms_per_chain)
