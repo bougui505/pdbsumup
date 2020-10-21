@@ -51,6 +51,7 @@ Total number of residues:	893
 Total number of atoms:		6956
 Coords min:			123.557 71.199 61.441
 Coords max:			204.933 149.983 148.387
+Box size:			81.376 78.784004 86.94599
 ```
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A+B'
@@ -78,6 +79,7 @@ Total number of residues:	613
 Total number of atoms:		4750
 Coords min:			123.557 85.071 61.441
 Coords max:			184.331 149.983 130.53
+Box size:			60.773994 64.912 69.089
 ```
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -s
@@ -98,6 +100,7 @@ Total number of residues:	385
 Total number of atoms:		2988
 Coords min:			123.557 109.164 61.441
 Coords max:			180.739 149.983 130.53
+Box size:			57.182 40.819 69.089
 ```
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -r
@@ -118,6 +121,7 @@ Total number of residues:	385
 Total number of atoms:		2988
 Coords min:			123.557 109.164 61.441
 Coords max:			180.739 149.983 130.53
+Box size:			57.182 40.819 69.089
 ```
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -sr
@@ -149,6 +153,7 @@ Total number of residues:	385
 Total number of atoms:		2988
 Coords min:			123.557 109.164 61.441
 Coords max:			180.739 149.983 130.53
+Box size:			57.182 40.819 69.089
 ```
 ```
 $ ./pdbsumup.py --pdb data/5lcw.pdb --select 'chain E+F+H+G+W' --sym --fasta
@@ -219,4 +224,5 @@ Total number of residues:	1072
 Total number of atoms:		8578
 Coords min:			81.228 134.165 110.565
 Coords max:			170.09 249.44 253.405
+Box size:			88.862 115.27501 142.84
 ```
