@@ -32,6 +32,22 @@ def get_sequence(chain):
     return seq
 
 
+def clean_resids(chain):
+    myspace = {'resids': []}
+    cmd.iterate(f'inpdb and chain {chain} polymer.protein',
+                'resids.append(resi)', space=myspace)
+    resids = myspace['resids']
+    altresids = []
+    for r in resids:
+        try:
+            int(r)
+        except ValueError:
+            altresids.append(r)
+            cmd.remove(f'resid {r} and chain {chain}')
+    altresids = numpy.unique(altresids)
+    return altresids
+
+
 def get_resids(chain):
     myspace = {'resids': []}
     cmd.iterate(f'inpdb and chain {chain} and polymer.protein',
@@ -280,6 +296,9 @@ if __name__ == '__main__':
     for chain in chains:
         ruler()
         print(f'chain {chain}')
+        altresids = clean_resids(chain)
+        if len(altresids) > 0:
+            print(f'Alternate resids:\t{",".join(altresids)}')
         nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
         if nres > 0:
             seq = get_sequence(chain)
