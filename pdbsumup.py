@@ -237,14 +237,14 @@ def get_unique_chains(seqhashes, seqs, chains, linewidth=80):
     for h in sequniq:
         chains = seqchains[h]
         if len(chains) > 1:
-            outfasta += "| >Chains "
+            outfasta += "FASTA| >Chains "
         else:
-            outfasta += "| >Chain "
+            outfasta += "FASTA| >Chain "
         outfasta += ' '.join(chains)
-        outfasta += '\n| '
+        outfasta += '\nFASTA| '
         seqstring = sequniq[h]
         seqwrap = textwrap.wrap(seqstring, linewidth)
-        outfasta += '\n| '.join(seqwrap)
+        outfasta += '\nFASTA| '.join(seqwrap)
         outfasta += '\n'
     return outfasta
 
