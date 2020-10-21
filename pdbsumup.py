@@ -224,6 +224,31 @@ def get_chain_seqmatch(seqhashes, chains):
     return outstr
 
 
+def get_unique_chains(seqhashes, seqs, chains, linewidth=80):
+    """
+    Return unique sequences from the pdb
+    """
+    seqchains = {h: [] for h in seqhashes}
+    sequniq = {}
+    for h, s, c in zip(seqhashes, seqs, chains):
+        seqchains[h].append(c)
+        sequniq[h] = s
+    outfasta = ''
+    for h in sequniq:
+        chains = seqchains[h]
+        if len(chains) > 1:
+            outfasta += "| >Chains "
+        else:
+            outfasta += "| >Chain "
+        outfasta += ' '.join(chains)
+        outfasta += '\n| '
+        seqstring = sequniq[h]
+        seqwrap = textwrap.wrap(seqstring, linewidth)
+        outfasta += '\n| '.join(seqwrap)
+        outfasta += '\n'
+    return outfasta
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
@@ -236,6 +261,8 @@ if __name__ == '__main__':
     parser.add_argument('-r', '--resids', help='Print the residue ids',
                         action='store_true', default=False)
     parser.add_argument('-sr', '--seqres', help='Print the sequence along with the residue ids',
+                        action='store_true', default=False)
+    parser.add_argument('-f', '--fasta', help='Return a fasta file with the unique sequences',
                         action='store_true', default=False)
     parser.add_argument('--sym', help='Print symmetry informations',
                         action='store_true', default=False)
@@ -282,6 +309,8 @@ if __name__ == '__main__':
     print(f'Total number of chains:\t\t{len(chains)} {",".join(chains)}')
     if args.sym:
         print(f'{get_chain_seqmatch(seqhashes, chains)}')
+    if args.fasta:
+        print(f'FASTA:\n{get_unique_chains(seqhashes, seqs, chains)}')
     print(f'Total number of residues:\t{nres_per_chain.sum()}')
     print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
     coords = cmd.get_coords('inpdb')
