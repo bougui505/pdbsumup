@@ -319,3 +319,5 @@ if __name__ == '__main__':
     coords = cmd.get_coords('inpdb')
     print(f"Coords min:\t\t\t{' '.join([str(e) for e in coords.min(axis=0)])}")
     print(f"Coords max:\t\t\t{' '.join([str(e) for e in coords.max(axis=0)])}")
+    boxsize = coords.max(axis=0) - coords.min(axis=0)
+    print(f"Box size:\t\t\t{' '.join([str(e) for e in boxsize])}")
