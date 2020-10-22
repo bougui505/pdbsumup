@@ -2,20 +2,22 @@
 ```
 $ ./pdbsumup.py -h
 
-usage: pdbsumup.py [-h] --pdb PDB [--select SELECT] [-s] [-r] [-sr] [-f]
+usage: pdbsumup.py [-h] --pdb PDB [--select SELECT] [-s] [-r] [-sr] [-f] [-rc]
                    [--sym]
 
 Get a sum up for a Protein structure file (e.g. pdb file)
 
 optional arguments:
-  -h, --help       show this help message and exit
-  --pdb PDB        Protein structure file
-  --select SELECT  Select part of the structure
-  -s, --seq        Print the sequence
-  -r, --resids     Print the residue ids
-  -sr, --seqres    Print the sequence along with the residue ids
-  -f, --fasta      Return a fasta file with the unique sequences
-  --sym            Print symmetry informations
+  -h, --help            show this help message and exit
+  --pdb PDB             Protein structure file
+  --select SELECT       Select part of the structure
+  -s, --seq             Print the sequence
+  -r, --resids          Print the residue ids for each chain
+  -sr, --seqres         Print the sequence along with the residue ids
+  -f, --fasta           Return a fasta file with the unique sequences
+  -rc, --resids_per_chain
+                        Return a fasta-like output containing the residue ids
+  --sym                 Print symmetry informations
 ```
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb

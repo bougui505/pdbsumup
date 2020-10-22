@@ -240,7 +240,7 @@ def get_chain_seqmatch(seqhashes, chains):
     return outstr
 
 
-def get_unique_chains(seqhashes, seqs, chains, linewidth=80):
+def get_unique_chains(seqhashes, seqs, chains, label='FASTA| ', linewidth=80):
     """
     Return unique sequences from the pdb
     """
@@ -253,14 +253,14 @@ def get_unique_chains(seqhashes, seqs, chains, linewidth=80):
     for h in sequniq:
         chains = seqchains[h]
         if len(chains) > 1:
-            outfasta += "FASTA| >Chains "
+            outfasta += f"{label}>Chains "
         else:
-            outfasta += "FASTA| >Chain "
+            outfasta += f"{label}>Chain "
         outfasta += ' '.join(chains)
-        outfasta += '\nFASTA| '
+        outfasta += f'\n{label}'
         seqstring = sequniq[h]
         seqwrap = textwrap.wrap(seqstring, linewidth)
-        outfasta += '\nFASTA| '.join(seqwrap)
+        outfasta += f'\n{label}'.join(seqwrap)
         outfasta += '\n'
     return outfasta
 
@@ -274,11 +274,13 @@ if __name__ == '__main__':
                         required=False, default='all')
     parser.add_argument('-s', '--seq', help='Print the sequence',
                         action='store_true', default=False)
-    parser.add_argument('-r', '--resids', help='Print the residue ids',
+    parser.add_argument('-r', '--resids', help='Print the residue ids for each chain',
                         action='store_true', default=False)
     parser.add_argument('-sr', '--seqres', help='Print the sequence along with the residue ids',
                         action='store_true', default=False)
     parser.add_argument('-f', '--fasta', help='Return a fasta file with the unique sequences',
+                        action='store_true', default=False)
+    parser.add_argument('-rc', '--resids_per_chain', help='Return a fasta-like output containing the residue ids',
                         action='store_true', default=False)
     parser.add_argument('--sym', help='Print symmetry informations',
                         action='store_true', default=False)
@@ -290,6 +292,7 @@ if __name__ == '__main__':
     cmd.remove(f'not (inpdb and {args.select})')
     chains = cmd.get_chains('inpdb')
     seqs = []
+    resids_per_chain = []
     nres_per_chain = []
     natoms_per_chain = []
     seqhashes = []
@@ -304,6 +307,7 @@ if __name__ == '__main__':
             seq = get_sequence(chain)
             seqs.append(seq)
             resids = get_resids(chain)
+            resids_per_chain.append(resids)
             resid_chunks = get_resid_chunks(resids)
             atomnames = get_atomnames(chain)
             natoms = cmd.select(f'inpdb and chain {chain}')
@@ -333,6 +337,10 @@ if __name__ == '__main__':
         print(f'{get_chain_seqmatch(seqhashes, chains)}')
     if args.fasta:
         print(f'FASTA:\n{get_unique_chains(seqhashes, seqs, chains)}')
+    if args.resids_per_chain:
+        rc = [get_unique_resids(rlist) for rlist in resids_per_chain]
+        rc = [",".join([str(e) for e in rlist]) for rlist in rc]
+        print(f'RESIDS:\n{get_unique_chains(seqhashes, rc, chains, label="RESIDS| ")}')
     print(f'Total number of residues:\t{nres_per_chain.sum()}')
     print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
     coords = cmd.get_coords('inpdb')
