@@ -296,6 +296,7 @@ if __name__ == '__main__':
     nres_per_chain = []
     natoms_per_chain = []
     seqhashes = []
+    print(f"Input file name: {PDBFILENAME}")
     for chain in chains:
         ruler()
         print(f'chain {chain}')

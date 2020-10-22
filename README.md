@@ -23,6 +23,7 @@ optional arguments:
 $ ./pdbsumup.py --pdb data/4ci0.pdb
 
  PyMOL not running, entering library mode (experimental)
+Input file name: data/4ci0.pdb
 --------------------------------
 chain A
 number of residues:	385
@@ -59,6 +60,7 @@ Box size:			81.376 78.784004 86.94599
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A+B'
 
  PyMOL not running, entering library mode (experimental)
+Input file name: data/4ci0.pdb
 --------------------------------
 chain A
 number of residues:	385
@@ -87,6 +89,7 @@ Box size:			60.773994 64.912 69.089
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -s
 
  PyMOL not running, entering library mode (experimental)
+Input file name: data/4ci0.pdb
 --------------------------------
 chain A
 number of residues:	385
@@ -108,6 +111,7 @@ Box size:			57.182 40.819 69.089
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -r
 
  PyMOL not running, entering library mode (experimental)
+Input file name: data/4ci0.pdb
 --------------------------------
 chain A
 number of residues:	385
@@ -129,6 +133,7 @@ Box size:			57.182 40.819 69.089
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -sr
 
  PyMOL not running, entering library mode (experimental)
+Input file name: data/4ci0.pdb
 --------------------------------
 chain A
 number of residues:	385
@@ -161,6 +166,7 @@ Box size:			57.182 40.819 69.089
 $ ./pdbsumup.py --pdb data/5lcw.pdb --select 'chain E+F+H+G+W' --sym --fasta
 
  PyMOL not running, entering library mode (experimental)
+Input file name: data/5lcw.pdb
 --------------------------------
 chain E
 number of residues:	56
