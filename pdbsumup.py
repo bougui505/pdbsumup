@@ -216,27 +216,32 @@ def find_rigid_alignment(A, B):
     return R, t, rmsd, theta_x, theta_y, theta_z
 
 
-def get_chain_seqmatch(seqhashes, chains):
+def get_chain_seqmatch(seqhashes, natoms_per_chain, chains):
     """
     Return exact sequence match for chains
     """
-    seqmatch = {h: [] for h in seqhashes}
-    for h, c in zip(seqhashes, chains):
-        seqmatch[h].append(c)
+    seqmatch = {(h, n): [] for (h, n) in zip(seqhashes, natoms_per_chain)}
+    for h, n, c in zip(seqhashes, natoms_per_chain, chains):
+        seqmatch[(h, n)].append(c)
     outstr = ''
-    for h in seqmatch:
-        chains = seqmatch[h]
+    chains_uniq = []
+    for hn in seqmatch:
+        chains = seqmatch[hn]
         if len(chains) > 1:
             outstr += '\nSymmetry:\t\t\t'
             outstr += chains[0]
+            chains_uniq.append(chains[0])
             B = cmd.get_coords(f'inpdb and chain {chains[0]} and name CA')
             for c in chains[1:]:
                 outstr += '\nSymmetry:\t\t\t'
                 A = cmd.get_coords(f'inpdb and chain {c} and name CA')
                 R, t, rmsd, theta_x, theta_y, theta_z = find_rigid_alignment(A, B)
                 outstr += f'={c} (RMSD={rmsd:.2f}Å, θx={theta_x:.2f}°, θy={theta_y:.2f}°, θz={theta_z:.2f}°, tx={t[0]:.2f}Å, ty={t[1]:.2f}Å, tz={t[2]:.2f}Å) '
+        else:
+            chains_uniq.append(chains[0])
     if outstr == '':
         outstr = 'Symmetry:\t\t\tNo symmetry'
+    outstr += f'\nSymmetry:\t\t\tUnique chains: {",".join(chains_uniq)}'
     return outstr
 
 
@@ -335,7 +340,7 @@ if __name__ == '__main__':
     natoms_per_chain = numpy.asarray(natoms_per_chain)
     print(f'Total number of chains:\t\t{len(chains)} {",".join(chains)}')
     if args.sym:
-        print(f'{get_chain_seqmatch(seqhashes, chains)}')
+        print(f'{get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}')
     if args.fasta:
         print(f'FASTA:\n{get_unique_chains(seqhashes, seqs, chains)}')
     if args.resids_per_chain:
