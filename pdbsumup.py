@@ -301,6 +301,8 @@ if __name__ == '__main__':
     nres_per_chain = []
     natoms_per_chain = []
     seqhashes = []
+    chains_prot = []
+    chains_not_prot = []
     print(f"Input file name: {PDBFILENAME}")
     for chain in chains:
         ruler()
@@ -310,6 +312,7 @@ if __name__ == '__main__':
             print(f'Alternate resids:\t{",".join(altresids)}')
         nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
         if nres > 0:
+            chains_prot.append(chain)
             seq = get_sequence(chain)
             seqs.append(seq)
             resids = get_resids(chain)
@@ -335,10 +338,13 @@ if __name__ == '__main__':
                 print(f'Sequence:\n{print_resid_seq(seq, resids)}')
         else:
             print("Not a polypeptide chain")
+            chains_not_prot.append(chain)
+    chains = chains_prot
     ruler('#', length=80)
     nres_per_chain = numpy.asarray(nres_per_chain)
     natoms_per_chain = numpy.asarray(natoms_per_chain)
-    print(f'Total number of chains:\t\t{len(chains)} {",".join(chains)}')
+    print(f'Total number of polypeptidic chains:\t\t{len(chains)} {",".join(chains)}')
+    print(f'Total number of non-polypeptidic chains:\t{len(chains_not_prot)} {",".join(chains_not_prot)}')
     if args.sym:
         print(f'{get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}')
     if args.fasta:
