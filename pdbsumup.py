@@ -5,6 +5,9 @@
 # https://research.pasteur.fr/en/member/guillaume-bouvier/
 # 2020-05-29 14:37:24 (UTC+0200)
 
+import os
+import sys
+sys.stdout.write('message: ')
 import textwrap
 import argparse
 import hashlib
@@ -153,10 +156,10 @@ def print_resid_seq(sequence, resids, linewidth=80):
     outres = textwrap.wrap(outres, linewidth)
     outstr = ''
     for lineres, lineseq in zip(outres, outseq):
-        outstr += '| '
+        outstr += '+ '
         outstr += lineres
         outstr += '\n'
-        outstr += '| '
+        outstr += '+ '
         outstr += lineseq
         outstr += '\n'
     return outstr
@@ -228,24 +231,24 @@ def get_chain_seqmatch(seqhashes, natoms_per_chain, chains):
     for hn in seqmatch:
         chains = seqmatch[hn]
         if len(chains) > 1:
-            outstr += '\nSymmetry:\t\t\t'
+            outstr += '\n+ '
             outstr += chains[0]
             chains_uniq.append(chains[0])
             B = cmd.get_coords(f'inpdb and chain {chains[0]} and name CA')
             for c in chains[1:]:
-                outstr += '\nSymmetry:\t\t\t'
+                outstr += '\n+ '
                 A = cmd.get_coords(f'inpdb and chain {c} and name CA')
                 R, t, rmsd, theta_x, theta_y, theta_z = find_rigid_alignment(A, B)
                 outstr += f'={c} (RMSD={rmsd:.2f}Å, θx={theta_x:.2f}°, θy={theta_y:.2f}°, θz={theta_z:.2f}°, tx={t[0]:.2f}Å, ty={t[1]:.2f}Å, tz={t[2]:.2f}Å) '
         else:
             chains_uniq.append(chains[0])
     if outstr == '':
-        outstr = 'Symmetry:\t\t\tNo symmetry'
-    outstr += f'\nSymmetry:\t\t\tUnique chains: {",".join(chains_uniq)}'
+        outstr = 'Symmetry: No symmetry'
+    outstr += f'\nunique_chains: {",".join(chains_uniq)}'
     return outstr
 
 
-def get_unique_chains(seqhashes, seqs, chains, label='FASTA| ', linewidth=80):
+def get_unique_chains(seqhashes, seqs, chains, label='+ ', linewidth=80):
     """
     Return unique sequences from the pdb
     """
@@ -303,13 +306,15 @@ if __name__ == '__main__':
     seqhashes = []
     chains_prot = []
     chains_not_prot = []
-    print(f"Input file name: {PDBFILENAME}")
+    name = os.path.basename(os.path.splitext(PDBFILENAME)[0])
     for chain in chains:
-        ruler()
-        print(f'chain {chain}')
+        print()
+        print(f'name: {name}')
+        print(f'filename: {PDBFILENAME}')
+        print(f'chain: {chain}')
         altresids = clean_resids(chain)
         if len(altresids) > 0:
-            print(f'Alternate resids:\t{",".join(altresids)}')
+            print(f'Alternate_resids: {",".join(altresids)}')
         nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
         if nres > 0:
             chains_prot.append(chain)
@@ -322,41 +327,45 @@ if __name__ == '__main__':
             natoms = cmd.select(f'inpdb and chain {chain}')
             nres_per_chain.append(nres)
             natoms_per_chain.append(natoms)
-            print(f'number of residues:\t{nres}')
-            print(f'number of atoms:\t{natoms}')
+            print(f'nres: {nres}')
+            print(f'natoms: {natoms}')
             if args.seq:
-                print(f'Sequence:\t\t{seq}')
+                print(f'sequence: {seq}')
             seqhash = md5sum(seq)
-            print(f'Sequence hash:\t\t{seqhash}')
+            print(f'seq_hash: {seqhash}')
             seqhashes.append(seqhash)
             if args.resids:
-                print(f'Resids:\t\t\t{print_resids(resids)}')
-            print(f'Residue chunks:\t\t{print_chunks(resid_chunks)}')
-            print(f'Atom names hash:\t{md5sum(atomnames)}')
-            print(f'Pymol selection string:\t{print_pymol_selection(chain, resid_chunks)}')
+                print(f'resids: {print_resids(resids)}')
+            print(f'resids_chunks: {print_chunks(resid_chunks)}')
+            print(f'atom_names_hash: {md5sum(atomnames)}')
+            print(f'selection_string: {print_pymol_selection(chain, resid_chunks)}')
             if args.seqres:
-                print(f'Sequence:\n{print_resid_seq(seq, resids)}')
+                print(f'sequence:\n{print_resid_seq(seq, resids)}')
         else:
-            print("Not a polypeptide chain")
+            print("comment: not a polypeptide chain")
             chains_not_prot.append(chain)
     chains = chains_prot
-    ruler('#', length=80)
+    print()
+    print(f"name: {name}")
+    print(f'filename: {PDBFILENAME}')
     nres_per_chain = numpy.asarray(nres_per_chain)
     natoms_per_chain = numpy.asarray(natoms_per_chain)
-    print(f'Total number of polypeptidic chains:\t\t{len(chains)} {",".join(chains)}')
-    print(f'Total number of non-polypeptidic chains:\t{len(chains_not_prot)} {",".join(chains_not_prot)}')
+    print(f'n_polypeptidic_chains: {len(chains)}')
+    print(f'polypeptidic_chain_names: {",".join(chains)}')
+    print(f'n_non_polypeptidic_chains: {len(chains_not_prot)}')
+    print(f'non_polypeptidic_chain_names: {",".join(chains_not_prot)}')
     if args.sym:
-        print(f'{get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}')
+        print(f'Symmetry: {get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}')
     if args.fasta:
-        print(f'FASTA:\n{get_unique_chains(seqhashes, seqs, chains)}')
+        print(f'fasta:\n{get_unique_chains(seqhashes, seqs, chains)}')
     if args.resids_per_chain:
         rc = [get_unique_resids(rlist) for rlist in resids_per_chain]
         rc = [",".join([str(e) for e in rlist]) for rlist in rc]
-        print(f'RESIDS:\n{get_unique_chains(seqhashes, rc, chains, label="RESIDS| ")}')
-    print(f'Total number of residues:\t{nres_per_chain.sum()}')
-    print(f'Total number of atoms:\t\t{natoms_per_chain.sum()}')
+        print(f'resids:\n{get_unique_chains(seqhashes, rc, chains, label="+ ")}')
+    print(f'nres: {nres_per_chain.sum()}')
+    print(f'natoms: {natoms_per_chain.sum()}')
     coords = cmd.get_coords('inpdb')
-    print(f"Coords min:\t\t\t{' '.join([str(e) for e in coords.min(axis=0)])}")
-    print(f"Coords max:\t\t\t{' '.join([str(e) for e in coords.max(axis=0)])}")
+    print(f"coords_min: {' '.join([str(e) for e in coords.min(axis=0)])}")
+    print(f"coords_max: {' '.join([str(e) for e in coords.max(axis=0)])}")
     boxsize = coords.max(axis=0) - coords.min(axis=0)
-    print(f"Box size:\t\t\t{' '.join([str(e) for e in boxsize])}")
+    print(f"box_size: {' '.join([str(e) for e in boxsize])}")
