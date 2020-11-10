@@ -243,7 +243,7 @@ def get_chain_seqmatch(seqhashes, natoms_per_chain, chains):
         else:
             chains_uniq.append(chains[0])
     if outstr == '':
-        outstr = 'symmetry: No symmetry'
+        outstr = 'no symmetry'
     outstr += f'\nunique_chains: {",".join(chains_uniq)}'
     return outstr
 
