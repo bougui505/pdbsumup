@@ -243,7 +243,7 @@ def get_chain_seqmatch(seqhashes, natoms_per_chain, chains):
         else:
             chains_uniq.append(chains[0])
     if outstr == '':
-        outstr = 'Symmetry: No symmetry'
+        outstr = 'symmetry: No symmetry'
     outstr += f'\nunique_chains: {",".join(chains_uniq)}'
     return outstr
 
@@ -355,7 +355,7 @@ if __name__ == '__main__':
     print(f'n_non_polypeptidic_chains: {len(chains_not_prot)}')
     print(f'non_polypeptidic_chain_names: {",".join(chains_not_prot)}')
     if args.sym:
-        print(f'Symmetry: {get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}')
+        print(f'symmetry: {get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}')
     if args.fasta:
         print(f'fasta:\n{get_unique_chains(seqhashes, seqs, chains)}')
     if args.resids_per_chain:

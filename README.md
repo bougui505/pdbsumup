@@ -259,7 +259,7 @@ n_polypeptidic_chains: 5
 polypeptidic_chain_names: E,F,G,H,W
 n_non_polypeptidic_chains: 0
 non_polypeptidic_chain_names: 
-Symmetry: 
+symmetry: 
 + G
 + =W (RMSD=0.95Å, θx=-131.46°, θy=-41.19°, θz=-97.49°, tx=315.93Å, ty=422.42Å, tz=243.46Å) 
 unique_chains: E,F,G,H
