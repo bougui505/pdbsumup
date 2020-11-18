@@ -292,6 +292,8 @@ if __name__ == '__main__':
                         action='store_true', default=False)
     parser.add_argument('--sym', help='Print symmetry informations',
                         action='store_true', default=False)
+    parser.add_argument('--coords', help='Print coordinates',
+                        action='store_true', default=False)
     args = parser.parse_args()
 
     PDBFILENAME = args.pdb
@@ -369,3 +371,14 @@ if __name__ == '__main__':
     print(f"coords_max: {' '.join([str(e) for e in coords.max(axis=0)])}")
     boxsize = coords.max(axis=0) - coords.min(axis=0)
     print(f"box_size: {' '.join([str(e) for e in boxsize])}")
+    if args.coords:
+        coords_str = ''
+        for i, xyz in enumerate(coords):
+            x, y, z = xyz
+            if i == 0:
+                coords_str += '%.3f %.3f %.3f' % (x, y, z)
+            else:
+                coords_str += '+ %.3f %.3f %.3f' % (x, y, z)
+            if i < len(coords) - 1:
+                coords_str += '\n'
+        print(f"coords: {coords_str}")
