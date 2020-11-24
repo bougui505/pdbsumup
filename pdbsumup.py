@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import numpy
 from pymol import cmd
+import scipy.spatial.distance as distance
 
 
 def ruler(char='-', length=32):
@@ -273,6 +274,22 @@ def get_unique_chains(seqhashes, seqs, chains, label='+ ', linewidth=80):
     return outfasta
 
 
+def chain_chain_interfaces(coords_per_chain, distcutoff=3., concutoff=6):
+    """
+    Two chains are in contacts if at least concutoff interatomic distances are
+    below distcutoff
+    """
+    n = len(coords_per_chain)
+    nconmat = []  # Store the number of contacts between chains
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            coords1 = coords_per_chain[i]
+            coords2 = coords_per_chain[j]
+            nconmat.append((distance.cdist(coords1, coords2) <= distcutoff).sum())
+    cmap = numpy.int_(distance.squareform(nconmat) >= concutoff)
+    return cmap
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
@@ -294,6 +311,8 @@ if __name__ == '__main__':
                         action='store_true', default=False)
     parser.add_argument('--coords', help='Print coordinates',
                         action='store_true', default=False)
+    parser.add_argument('--inter', help='Get chain chain interface map',
+                        action='store_true', default=False)
     args = parser.parse_args()
 
     PDBFILENAME = args.pdb
@@ -308,6 +327,7 @@ if __name__ == '__main__':
     seqhashes = []
     chains_prot = []
     chains_not_prot = []
+    coords_per_chain = []
     name = os.path.basename(os.path.splitext(PDBFILENAME)[0])
     for chain in chains:
         print()
@@ -319,6 +339,7 @@ if __name__ == '__main__':
             print(f'Alternate_resids: {",".join(altresids)}')
         nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
         if nres > 0:
+            coords_per_chain.append(cmd.get_coords(f'chain {chain}'))
             chains_prot.append(chain)
             seq = get_sequence(chain)
             seqs.append(seq)
@@ -382,3 +403,9 @@ if __name__ == '__main__':
             if i < len(coords) - 1:
                 coords_str += '\n'
         print(f"coords: {coords_str}")
+    if args.inter:
+        cmap = chain_chain_interfaces(coords_per_chain)
+        print(f"interfaces: ")
+        print(f"+   {' '.join(chains)}")
+        for i, line in enumerate(cmap):
+            print(f"+ {chains[i]} {' '.join([str(e) for e in line])}")
