@@ -3,7 +3,7 @@
 $ ./pdbsumup.py -h
 
 message: usage: pdbsumup.py [-h] --pdb PDB [--select SELECT] [-s] [-r] [-sr] [-f] [-rc]
-                   [--sym]
+                   [--sym] [--coords] [--inter]
 
 Get a sum up for a Protein structure file (e.g. pdb file)
 
@@ -18,6 +18,8 @@ optional arguments:
   -rc, --resids_per_chain
                         Return a fasta-like output containing the residue ids
   --sym                 Print symmetry informations
+  --coords              Print coordinates
+  --inter               Get chain chain interface map
 ```
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb
