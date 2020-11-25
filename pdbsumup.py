@@ -14,6 +14,7 @@ import hashlib
 import numpy
 from pymol import cmd
 import scipy.spatial.distance as distance
+from Bio import pairwise2
 
 
 def ruler(char='-', length=32):
@@ -290,6 +291,23 @@ def chain_chain_interfaces(coords_per_chain, distcutoff=3., concutoff=6):
     return cmap
 
 
+def align_sequences(sequences):
+    n = len(sequences)
+    aln_scores = []
+    alns = []
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            seq1 = sequences[i]
+            seq2 = sequences[j]
+            aln = pairwise2.align.globalxx(seq1, seq2)
+            alns.append(aln)
+            score = aln[0][2] / aln[0][4]
+            aln_scores.append(score)
+    aln_scores = distance.squareform(aln_scores)
+    aln_scores += numpy.identity(n)
+    return aln_scores
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
@@ -312,6 +330,8 @@ if __name__ == '__main__':
     parser.add_argument('--coords', help='Print coordinates',
                         action='store_true', default=False)
     parser.add_argument('--inter', help='Get chain chain interface map',
+                        action='store_true', default=False)
+    parser.add_argument('--aln', help='Align pairwisely the sequence of the chains and return the pairwise matrix of sequence identity',
                         action='store_true', default=False)
     args = parser.parse_args()
 
@@ -409,3 +429,9 @@ if __name__ == '__main__':
         print(f"+   {' '.join(chains)}")
         for i, line in enumerate(cmap):
             print(f"+ {chains[i]} {' '.join([str(e) for e in line])}")
+    if args.aln:
+        alnmat = align_sequences(seqs)
+        print("seq_identity: ")
+        print(f"+     {'   '.join(chains)}")
+        for i, line in enumerate(alnmat):
+            print(f"+ {chains[i]} {' '.join(['%3d'%(e*100) for e in line])}")
