@@ -53,6 +53,15 @@ def clean_resids(chain):
     return altresids
 
 
+def find_altloc(chain):
+    myspace = {'resids': []}
+    sel = f'inpdb and chain {chain} and polymer.protein and not alt ""'
+    cmd.iterate(sel, 'resids.append(resi)', space=myspace)
+    resids = numpy.int_(myspace['resids'])
+    resids = numpy.unique(resids)
+    return resids
+
+
 def get_resids(chain):
     myspace = {'resids': []}
     cmd.iterate(f'inpdb and chain {chain} and polymer.protein',
@@ -356,7 +365,10 @@ if __name__ == '__main__':
         print(f'chain: {chain}')
         altresids = clean_resids(chain)
         if len(altresids) > 0:
-            print(f'Alternate_resids: {",".join(altresids)}')
+            print(f'alternate_resids: {",".join(altresids)}')
+        altlocs = find_altloc(chain)
+        if len(altlocs) > 0:
+            print(f'alternate_locations: {",".join([str(e) for e in altlocs])}')
         nres = cmd.select(f'inpdb and polymer.protein and name CA and chain {chain}')
         if nres > 0:
             coords_per_chain.append(cmd.get_coords(f'chain {chain}'))
