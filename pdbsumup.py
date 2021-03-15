@@ -70,6 +70,15 @@ def get_resids(chain):
     return resids
 
 
+def get_ligands(chain):
+    myspace = {'resids': [], 'resnames': []}
+    cmd.iterate(f'inpdb and chain {chain} and not polymer.protein',
+                'resids.append(resi); resnames.append(resn)', space=myspace)
+    resids = numpy.int_(myspace['resids'])
+    resnames = numpy.unique(myspace['resnames'])
+    return resids, resnames
+
+
 def get_atomnames(chain):
     myspace = {'atomnames': []}
     cmd.iterate(f'inpdb and chain {chain} and polymer.protein',
@@ -378,6 +387,7 @@ if __name__ == '__main__':
             seq = get_sequence(chain)
             seqs.append(seq)
             resids = get_resids(chain)
+            ligands, ligand_names = get_ligands(chain)
             resids_per_chain.append(resids)
             resid_chunks = get_resid_chunks(resids)
             atomnames = get_atomnames(chain)
@@ -394,12 +404,23 @@ if __name__ == '__main__':
             if args.resids:
                 print(f'resids: {print_resids(resids)}')
             print(f'resids_chunks: {print_chunks(resid_chunks)}')
+            if len(ligands) > 0:
+                ligand_chunks = get_resid_chunks(ligands)
+                print(f'ligand_names: {" ".join(ligand_names)}')
+                print(f'ligands_chunks: {print_chunks(ligand_chunks)}')
+                print(f'ligand_selection_string: {print_pymol_selection(chain, ligand_chunks)}')
             print(f'atom_names_hash: {md5sum(atomnames)}')
             print(f'selection_string: {print_pymol_selection(chain, resid_chunks)}')
             if args.seqres:
                 print(f'sequence:\n{print_resid_seq(seq, resids)}')
         else:
             print("comment: not a polypeptide chain")
+            ligands, ligand_names = get_ligands(chain)
+            if len(ligands) > 0:
+                ligand_chunks = get_resid_chunks(ligands)
+                print(f'ligand_names: {" ".join(ligand_names)}')
+                print(f'ligands_chunks: {print_chunks(ligand_chunks)}')
+                print(f'ligand_selection_string: {print_pymol_selection(chain, ligand_chunks)}')
             chains_not_prot.append(chain)
     chains = chains_prot
     print()
