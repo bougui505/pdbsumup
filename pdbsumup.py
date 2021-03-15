@@ -39,7 +39,7 @@ def get_sequence(chain):
 
 def clean_resids(chain):
     myspace = {'resids': []}
-    cmd.iterate(f'inpdb and chain {chain} and polymer.protein',
+    cmd.iterate(f'inpdb and chain {chain}',
                 'resids.append(resi)', space=myspace)
     resids = myspace['resids']
     altresids = []
