@@ -75,7 +75,8 @@ def get_ligands(chain):
     cmd.iterate(f'inpdb and chain {chain} and not polymer.protein',
                 'resids.append(resi); resnames.append(resn)', space=myspace)
     resids = numpy.int_(myspace['resids'])
-    resnames = numpy.unique(myspace['resnames'])
+    _, ind = numpy.unique(resids, return_index=True)
+    resnames = numpy.asarray(myspace['resnames'])[ind]
     return resids, resnames
 
 
