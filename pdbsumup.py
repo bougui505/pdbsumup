@@ -359,6 +359,8 @@ if __name__ == '__main__':
     coords_per_chain = []
     name = os.path.basename(os.path.splitext(PDBFILENAME)[0])
     for chain in chains:
+        if chain == '':
+            chain = "''"
         print()
         print(f'name: {name}')
         print(f'filename: {PDBFILENAME}')
