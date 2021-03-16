@@ -408,7 +408,7 @@ if __name__ == '__main__':
             if len(ligands) > 0:
                 ligand_chunks = get_resid_chunks(ligands)
                 print(f'ligand_names: {" ".join(ligand_names)}')
-                print(f'ligands_chunks: {print_chunks(ligand_chunks)}')
+                print(f'ligand_resids: {" ".join([str(e) for e in numpy.unique(ligands)])}')
                 print(f'ligand_selection_string: {print_pymol_selection(chain, ligand_chunks)}')
             print(f'atom_names_hash: {md5sum(atomnames)}')
             print(f'selection_string: {print_pymol_selection(chain, resid_chunks)}')
@@ -420,7 +420,7 @@ if __name__ == '__main__':
             if len(ligands) > 0:
                 ligand_chunks = get_resid_chunks(ligands)
                 print(f'ligand_names: {" ".join(ligand_names)}')
-                print(f'ligands_chunks: {print_chunks(ligand_chunks)}')
+                print(f'ligand_resids: {" ".join([str(e) for e in numpy.unique(ligands)])}')
                 print(f'ligand_selection_string: {print_pymol_selection(chain, ligand_chunks)}')
             chains_not_prot.append(chain)
     chains = chains_prot
