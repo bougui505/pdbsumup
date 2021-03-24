@@ -26,8 +26,7 @@ optional arguments:
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb
 
-message:  PyMOL not running, entering library mode (experimental)
-
+message: 
 name: 4ci0
 filename: data/4ci0.pdb
 chain: A
@@ -35,6 +34,9 @@ nres: 385
 natoms: 2988
 seq_hash: 9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 resids_chunks: 2..386
+ligand_names: FE NI FE2
+ligand_resids: 1387 1388 1389
+ligand_selection_string: chain A and resi 1387-1389
 atom_names_hash: 401e196f15ac649d654360a1ed36fd1bd1156cf62ca23fd188f10195
 selection_string: chain A and resi 2-386
 
@@ -45,6 +47,9 @@ nres: 228
 natoms: 1762
 seq_hash: 4a21f6493a367ce3fe7503f03834158adaf72594d204be86a56bf634
 resids_chunks: 46..273
+ligand_names: SF4 SF4 SF4 ZN
+ligand_resids: 1274 1275 1276 1277
+ligand_selection_string: chain B and resi 1274-1277
 atom_names_hash: af20fd05b0db3a8d95e60b1c95217b6c2d29cd71efeea627e50bb64d
 selection_string: chain B and resi 46-273
 
@@ -55,6 +60,9 @@ nres: 280
 natoms: 2206
 seq_hash: b3a553385e60b21aeac78c89ab59db25cf6120844e7c8014cd421dc4
 resids_chunks: 2..281
+ligand_names: SF4 FAD
+ligand_resids: 1282 1283
+ligand_selection_string: chain C and resi 1282-1283
 atom_names_hash: 77e11bf0423da1a43dd294621849c68de901ccca51b3d1e72281423f
 selection_string: chain C and resi 2-281
 
@@ -73,8 +81,7 @@ box_size: 81.376 78.784004 86.94599
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A+B'
 
-message:  PyMOL not running, entering library mode (experimental)
-
+message: 
 name: 4ci0
 filename: data/4ci0.pdb
 chain: A
@@ -82,6 +89,9 @@ nres: 385
 natoms: 2988
 seq_hash: 9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 resids_chunks: 2..386
+ligand_names: FE NI FE2
+ligand_resids: 1387 1388 1389
+ligand_selection_string: chain A and resi 1387-1389
 atom_names_hash: 401e196f15ac649d654360a1ed36fd1bd1156cf62ca23fd188f10195
 selection_string: chain A and resi 2-386
 
@@ -92,6 +102,9 @@ nres: 228
 natoms: 1762
 seq_hash: 4a21f6493a367ce3fe7503f03834158adaf72594d204be86a56bf634
 resids_chunks: 46..273
+ligand_names: SF4 SF4 SF4 ZN
+ligand_resids: 1274 1275 1276 1277
+ligand_selection_string: chain B and resi 1274-1277
 atom_names_hash: af20fd05b0db3a8d95e60b1c95217b6c2d29cd71efeea627e50bb64d
 selection_string: chain B and resi 46-273
 
@@ -110,8 +123,7 @@ box_size: 60.773994 64.912 69.089
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -s
 
-message:  PyMOL not running, entering library mode (experimental)
-
+message: 
 name: 4ci0
 filename: data/4ci0.pdb
 chain: A
@@ -120,6 +132,9 @@ natoms: 2988
 sequence: SERIVISPTSRQEGHAELVMEVDDEGIVTKGRYFSITPVRGLEKMVTGKAPETAPVMVQRICGVCPIPHTLASVEAIDDSLDIEVPKAGRLLRELTLAAHHVNSHAIHHFLIAPDFVPENLMADAINSVSEIRKNAQYVVDMVAGEGIHPSDVRIGGMADNITELARKRLYARLKQLKPKVNEHVELMIGLIEDKGLPEGLGVHNQPTLASHQIYGDRTKFDLDRFTEIMPESWYDDPEIAKRACSTIPLYDGRNVEVGPRARMVEFQGFKERGVVAQHVARALEMKTALSRAIEILDELDTSAPVRADFDERGTGKLGIGAIEAPRGLDVHMAKVENGKIQFYSALVPTTWNIPTMGPATEGFHHEYGPHVIRAYDPCLSCATH
 seq_hash: 9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 resids_chunks: 2..386
+ligand_names: FE NI FE2
+ligand_resids: 1387 1388 1389
+ligand_selection_string: chain A and resi 1387-1389
 atom_names_hash: 401e196f15ac649d654360a1ed36fd1bd1156cf62ca23fd188f10195
 selection_string: chain A and resi 2-386
 
@@ -138,8 +153,7 @@ box_size: 57.182 40.819 69.089
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -r
 
-message:  PyMOL not running, entering library mode (experimental)
-
+message: 
 name: 4ci0
 filename: data/4ci0.pdb
 chain: A
@@ -148,6 +162,9 @@ natoms: 2988
 seq_hash: 9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 resids: 2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23;24;25;26;27;28;29;30;31;32;33;34;35;36;37;38;39;40;41;42;43;44;45;46;47;48;49;50;51;52;53;54;55;56;57;58;59;60;61;62;63;64;65;66;67;68;69;70;71;72;73;74;75;76;77;78;79;80;81;82;83;84;85;86;87;88;89;90;91;92;93;94;95;96;97;98;99;100;101;102;103;104;105;106;107;108;109;110;111;112;113;114;115;116;117;118;119;120;121;122;123;124;125;126;127;128;129;130;131;132;133;134;135;136;137;138;139;140;141;142;143;144;145;146;147;148;149;150;151;152;153;154;155;156;157;158;159;160;161;162;163;164;165;166;167;168;169;170;171;172;173;174;175;176;177;178;179;180;181;182;183;184;185;186;187;188;189;190;191;192;193;194;195;196;197;198;199;200;201;202;203;204;205;206;207;208;209;210;211;212;213;214;215;216;217;218;219;220;221;222;223;224;225;226;227;228;229;230;231;232;233;234;235;236;237;238;239;240;241;242;243;244;245;246;247;248;249;250;251;252;253;254;255;256;257;258;259;260;261;262;263;264;265;266;267;268;269;270;271;272;273;274;275;276;277;278;279;280;281;282;283;284;285;286;287;288;289;290;291;292;293;294;295;296;297;298;299;300;301;302;303;304;305;306;307;308;309;310;311;312;313;314;315;316;317;318;319;320;321;322;323;324;325;326;327;328;329;330;331;332;333;334;335;336;337;338;339;340;341;342;343;344;345;346;347;348;349;350;351;352;353;354;355;356;357;358;359;360;361;362;363;364;365;366;367;368;369;370;371;372;373;374;375;376;377;378;379;380;381;382;383;384;385;386
 resids_chunks: 2..386
+ligand_names: FE NI FE2
+ligand_resids: 1387 1388 1389
+ligand_selection_string: chain A and resi 1387-1389
 atom_names_hash: 401e196f15ac649d654360a1ed36fd1bd1156cf62ca23fd188f10195
 selection_string: chain A and resi 2-386
 
@@ -166,8 +183,7 @@ box_size: 57.182 40.819 69.089
 ```
 $ ./pdbsumup.py --pdb data/4ci0.pdb --select 'chain A' -sr
 
-message:  PyMOL not running, entering library mode (experimental)
-
+message: 
 name: 4ci0
 filename: data/4ci0.pdb
 chain: A
@@ -175,6 +191,9 @@ nres: 385
 natoms: 2988
 seq_hash: 9627ab006ea654bdabf4bdd7b3a4c11eee47fe6f1164a55b1249cb95
 resids_chunks: 2..386
+ligand_names: FE NI FE2
+ligand_resids: 1387 1388 1389
+ligand_selection_string: chain A and resi 1387-1389
 atom_names_hash: 401e196f15ac649d654360a1ed36fd1bd1156cf62ca23fd188f10195
 selection_string: chain A and resi 2-386
 sequence:
@@ -205,8 +224,7 @@ box_size: 57.182 40.819 69.089
 ```
 $ ./pdbsumup.py --pdb data/5lcw.pdb --select 'chain E+F+H+G+W' --sym --fasta
 
-message:  PyMOL not running, entering library mode (experimental)
-
+message: 
 name: 5lcw
 filename: data/5lcw.pdb
 chain: E
