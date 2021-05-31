@@ -448,6 +448,8 @@ if __name__ == '__main__':
     print(f"coords_max: {' '.join([str(e) for e in coords.max(axis=0)])}")
     boxsize = coords.max(axis=0) - coords.min(axis=0)
     print(f"box_size: {' '.join([str(e) for e in boxsize])}")
+    center = coords.mean(axis=0)
+    print(f"box_center: {' '.join([str(e) for e in center])}")
     if args.coords:
         coords_str = ''
         for i, xyz in enumerate(coords):
