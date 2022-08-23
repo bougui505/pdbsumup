@@ -6,8 +6,6 @@
 # 2020-05-29 14:37:24 (UTC+0200)
 
 import os
-import sys
-sys.stdout.write('message: ')
 import textwrap
 import argparse
 import hashlib
@@ -15,6 +13,9 @@ import numpy
 from pymol import cmd
 import scipy.spatial.distance as distance
 from Bio import pairwise2
+
+cmd.set('fetch_path', os.path.expanduser('~/pdb'))
+cmd.set('fetch_type_default', 'mmtf')
 
 
 def ruler(char='-', length=32):
@@ -39,8 +40,7 @@ def get_sequence(chain):
 
 def clean_resids(chain):
     myspace = {'resids': []}
-    cmd.iterate(f'inpdb and chain {chain}',
-                'resids.append(resi)', space=myspace)
+    cmd.iterate(f'inpdb and chain {chain}', 'resids.append(resi)', space=myspace)
     resids = myspace['resids']
     altresids = []
     for r in resids:
@@ -64,8 +64,7 @@ def find_altloc(chain):
 
 def get_resids(chain):
     myspace = {'resids': []}
-    cmd.iterate(f'inpdb and chain {chain} and polymer.protein',
-                'resids.append(resi)', space=myspace)
+    cmd.iterate(f'inpdb and chain {chain} and polymer.protein', 'resids.append(resi)', space=myspace)
     resids = numpy.int_(myspace['resids'])
     return resids
 
@@ -73,7 +72,8 @@ def get_resids(chain):
 def get_ligands(chain):
     myspace = {'resids': [], 'resnames': []}
     cmd.iterate(f'inpdb and chain {chain} and not polymer.protein',
-                'resids.append(resi); resnames.append(resn)', space=myspace)
+                'resids.append(resi); resnames.append(resn)',
+                space=myspace)
     resids = numpy.int_(myspace['resids'])
     _, ind = numpy.unique(resids, return_index=True)
     resnames = numpy.asarray(myspace['resnames'])[ind]
@@ -82,14 +82,17 @@ def get_ligands(chain):
 
 def get_atomnames(chain):
     myspace = {'atomnames': []}
-    cmd.iterate(f'inpdb and chain {chain} and polymer.protein',
-                'atomnames.append(name)', space=myspace)
+    cmd.iterate(f'inpdb and chain {chain} and polymer.protein', 'atomnames.append(name)', space=myspace)
     atomnames = myspace['atomnames']
     return atomnames
 
 
 def get_resid_chunks(resids):
-    chunks = {0: [resids[0], ]}
+    chunks = {
+        0: [
+            resids[0],
+        ]
+    }
     inds = numpy.where(numpy.diff(resids) > 1)[0]
     for i, ind in enumerate(inds):
         chunks[i].append(resids[ind])
@@ -330,33 +333,45 @@ def align_sequences(sequences):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
-    parser.add_argument('--pdb', type=str, help='Protein structure file',
-                        required=True)
-    parser.add_argument('--select', type=str, help='Select part of the structure',
-                        required=False, default='all')
-    parser.add_argument('-s', '--seq', help='Print the sequence',
-                        action='store_true', default=False)
-    parser.add_argument('-r', '--resids', help='Print the residue ids for each chain',
-                        action='store_true', default=False)
-    parser.add_argument('-sr', '--seqres', help='Print the sequence along with the residue ids',
-                        action='store_true', default=False)
-    parser.add_argument('-f', '--fasta', help='Return a fasta file with the unique sequences',
-                        action='store_true', default=False)
-    parser.add_argument('-rc', '--resids_per_chain', help='Return a fasta-like output containing the residue ids',
-                        action='store_true', default=False)
-    parser.add_argument('--sym', help='Print symmetry informations',
-                        action='store_true', default=False)
-    parser.add_argument('--coords', help='Print coordinates',
-                        action='store_true', default=False)
-    parser.add_argument('--inter', help='Get chain chain interface map',
-                        action='store_true', default=False)
-    parser.add_argument('--aln', help='Align pairwisely the sequence of the chains and return the pairwise matrix of sequence identity',
-                        action='store_true', default=False)
+    parser.add_argument('--pdb', type=str, help='Protein structure file', required=True)
+    parser.add_argument('--select', type=str, help='Select part of the structure', required=False, default='all')
+    parser.add_argument('-s', '--seq', help='Print the sequence', action='store_true', default=False)
+    parser.add_argument('-r',
+                        '--resids',
+                        help='Print the residue ids for each chain',
+                        action='store_true',
+                        default=False)
+    parser.add_argument('-sr',
+                        '--seqres',
+                        help='Print the sequence along with the residue ids',
+                        action='store_true',
+                        default=False)
+    parser.add_argument('-f',
+                        '--fasta',
+                        help='Return a fasta file with the unique sequences',
+                        action='store_true',
+                        default=False)
+    parser.add_argument('-rc',
+                        '--resids_per_chain',
+                        help='Return a fasta-like output containing the residue ids',
+                        action='store_true',
+                        default=False)
+    parser.add_argument('--sym', help='Print symmetry informations', action='store_true', default=False)
+    parser.add_argument('--coords', help='Print coordinates', action='store_true', default=False)
+    parser.add_argument('--inter', help='Get chain chain interface map', action='store_true', default=False)
+    parser.add_argument(
+        '--aln',
+        help='Align pairwisely the sequence of the chains and return the pairwise matrix of sequence identity',
+        action='store_true',
+        default=False)
     args = parser.parse_args()
 
     PDBFILENAME = args.pdb
 
-    cmd.load(PDBFILENAME, 'inpdb')
+    if os.path.exists(PDBFILENAME):
+        cmd.load(PDBFILENAME, 'inpdb')
+    else:
+        cmd.fetch(code=PDBFILENAME, name='inpdb')
     cmd.remove(f'not (inpdb and {args.select})')
     chains = cmd.get_chains('inpdb')
     seqs = []
@@ -372,8 +387,8 @@ if __name__ == '__main__':
         if chain == '':
             chain = "''"
         print()
-        print(f'name: {name}')
-        print(f'filename: {PDBFILENAME}')
+        # print(f'name: {name}')
+        # print(f'filename: {PDBFILENAME}')
         print(f'chain: {chain}')
         altresids = clean_resids(chain)
         if len(altresids) > 0:
@@ -463,7 +478,7 @@ if __name__ == '__main__':
         print(f"coords: {coords_str}")
     if args.inter:
         cmap = chain_chain_interfaces(coords_per_chain)
-        print(f"interfaces: ")
+        print("interfaces: ")
         print(f"+   {' '.join(chains)}")
         for i, line in enumerate(cmap):
             print(f"+ {chains[i]} {' '.join([str(e) for e in line])}")
