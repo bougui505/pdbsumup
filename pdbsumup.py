@@ -13,9 +13,17 @@ import numpy
 from pymol import cmd
 import scipy.spatial.distance as distance
 from Bio import pairwise2
+from PIL import Image
+import requests
 
 cmd.set('fetch_path', os.path.expanduser('~/pdb'))
 cmd.set('fetch_type_default', 'mmtf')
+
+
+def plot_pdb_image(pdbcode):
+    url = f'https://cdn.rcsb.org/images/structures/{pdbcode[1:3]}/{pdbcode}/{pdbcode}_model-1.jpeg'
+    im = Image.open(requests.get(url, stream=True).raw)
+    im.show()
 
 
 def ruler(char='-', length=32):
@@ -334,6 +342,11 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
     parser.add_argument('--pdb', type=str, help='Protein structure file', required=True)
+    parser.add_argument(
+        '--img',
+        help=
+        'Display protein image from the pdb for the assymetric unit. Only working if a pdbcode is given in pdb argument.',
+        action='store_true')
     parser.add_argument('--select', type=str, help='Select part of the structure', required=False, default='all')
     parser.add_argument('-s', '--seq', help='Print the sequence', action='store_true', default=False)
     parser.add_argument('-r',
@@ -488,3 +501,5 @@ if __name__ == '__main__':
         print(f"+     {'   '.join(chains)}")
         for i, line in enumerate(alnmat):
             print(f"+ {chains[i]} {' '.join(['%3d'%(e*100) for e in line])}")
+    if args.img:
+        plot_pdb_image(args.pdb)
