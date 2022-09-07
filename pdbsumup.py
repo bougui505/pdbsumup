@@ -15,6 +15,7 @@ import scipy.spatial.distance as distance
 from Bio import pairwise2
 from PIL import Image
 import requests
+import numpy as np
 
 cmd.set('fetch_path', os.path.expanduser('~/pdb'))
 cmd.set('fetch_type_default', 'mmtf')
@@ -137,10 +138,13 @@ def print_sequence(sequence, chunks):
     return seq_string
 
 
-def print_pymol_selection(chain, chunks):
+def print_pymol_selection(chain=None, chunks=None):
     keys = list(chunks.keys())
     keys.sort()
-    out = f'chain {chain} and resi '
+    if chain is not None:
+        out = f'chain {chain} and resi '
+    else:
+        out = 'resi '
     nchunks = len(keys)
     for i, k in enumerate(keys):
         out += f'{chunks[k][0]}-{chunks[k][1]}'
@@ -338,6 +342,14 @@ def align_sequences(sequences):
     return aln_scores
 
 
+def common_resids(resids_per_chain):
+    setlist = [set(e) for e in resids_per_chain]
+    out = set.intersection(*setlist)
+    out = list(out)
+    out = sorted(out)
+    return np.asarray(out)
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get a sum up for a Protein structure file (e.g. pdb file)')
@@ -463,6 +475,8 @@ if __name__ == '__main__':
     print(f'non_polypeptidic_chain_names: {",".join(chains_not_prot)}')
     if args.sym:
         print(f'symmetry: {get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}')
+        common_chunks = print_pymol_selection(None, get_resid_chunks(common_resids(resids_per_chain)))
+        print(f'common_chunks: {common_chunks}')  # Common chunks for all chains
     if args.fasta:
         print(f'fasta:\n{get_unique_chains(seqhashes, seqs, chains)}')
     if args.resids_per_chain:
