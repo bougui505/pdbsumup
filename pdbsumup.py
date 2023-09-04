@@ -362,6 +362,21 @@ def common_resids(resids_per_chain):
     return np.asarray(out)
 
 
+def center_basis():
+    """
+    Center the coordinates of the system based on the moment of inertia of the system
+    """
+    coords = cmd.get_coords(selection="inpdb")
+    mu = coords.mean(axis=0)
+    coords -= mu
+    eigenvalues, eigenvectors = numpy.linalg.eig(coords.T.dot(coords))
+    sorter = eigenvalues.argsort()[::-1]
+    eigenvalues = eigenvalues[sorter]
+    eigenvectors = eigenvectors[:, sorter]
+    coords = eigenvectors.dot(coords.T).T
+    cmd.load_coords(coords, "inpdb")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Get a sum up for a Protein structure file (e.g. pdb file)"
@@ -414,6 +429,11 @@ if __name__ == "__main__":
         "--sym", help="Print symmetry informations", action="store_true", default=False
     )
     parser.add_argument(
+        "--center",
+        help="Recenter the coordinates based on the principal axes",
+        action="store_true",
+    )
+    parser.add_argument(
         "--coords", help="Print coordinates", action="store_true", default=False
     )
     parser.add_argument(
@@ -437,6 +457,8 @@ if __name__ == "__main__":
     else:
         cmd.fetch(code=PDBFILENAME, name="inpdb")
     cmd.remove(f"not (inpdb and {args.select})")
+    if args.center:
+        center_basis()
     chains = cmd.get_chains("inpdb")
     seqs = []
     resids_per_chain = []
