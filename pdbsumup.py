@@ -588,3 +588,4 @@ if __name__ == "__main__":
             print(f"+ {chains[i]} {' '.join(['%3d'%(e*100) for e in line])}")
     if args.img:
         plot_pdb_image(args.pdb)
+    print("--")
