@@ -486,7 +486,7 @@ def main(
             print(f"atom_names_hash={md5sum(atomnames)}")
             print(f"selection_string={print_pymol_selection(chain, resid_chunks)}")
             if seqres:
-                print(f"sequence=\n{print_resid_seq(seq, resids)}")
+                print(f"sequence=\n{print_resid_seq(seq, current_chain_resids)}")
         else:
             print("comment: not a polypeptide chain")
             ligands, ligand_names = get_ligands(chain)
