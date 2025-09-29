@@ -7,7 +7,6 @@
 
 import os
 import textwrap
-import argparse
 import hashlib
 import numpy
 from pymol import cmd
@@ -16,6 +15,7 @@ from Bio import pairwise2
 from PIL import Image
 import requests
 import numpy as np
+import typer
 
 cmd.set("fetch_path", os.path.expanduser("~/pdb"))
 cmd.set("fetch_type_default", "cif")
@@ -376,91 +376,60 @@ def center_basis():
     cmd.load_coords(coords, "inpdb")
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Get a sum up for a Protein structure file (e.g. pdb file)"
-    )
-    parser.add_argument("--pdb", type=str, help="Protein structure file", required=True)
-    parser.add_argument(
+app = typer.Typer(help="Get a sum up for a Protein structure file (e.g. pdb file)")
+
+
+@app.command()
+def main(
+    pdb: str = typer.Argument(..., help="Protein structure file"),
+    img: bool = typer.Option(
+        False,
         "--img",
         help="Display protein image from the pdb for the assymetric unit. Only working if a pdbcode is given in pdb argument.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--select",
-        type=str,
-        help="Select part of the structure",
-        required=False,
-        default="all",
-    )
-    parser.add_argument(
-        "-s", "--seq", help="Print the sequence", action="store_true", default=False
-    )
-    parser.add_argument(
-        "-r",
-        "--resids",
-        help="Print the residue ids for each chain",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument(
-        "-sr",
-        "--seqres",
-        help="Print the sequence along with the residue ids",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument(
-        "-f",
-        "--fasta",
-        help="Return a fasta file with the unique sequences",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument(
+    ),
+    select: str = typer.Option("all", "--select", help="Select part of the structure"),
+    seq: bool = typer.Option(False, "-s", "--seq", help="Print the sequence"),
+    resids: bool = typer.Option(
+        False, "-r", "--resids", help="Print the residue ids for each chain"
+    ),
+    seqres: bool = typer.Option(
+        False, "-sr", "--seqres", help="Print the sequence along with the residue ids"
+    ),
+    fasta: bool = typer.Option(
+        False, "-f", "--fasta", help="Return a fasta file with the unique sequences"
+    ),
+    resids_per_chain: bool = typer.Option(
+        False,
         "-rc",
-        "--resids_per_chain",
+        "--resids-per-chain",
         help="Return a fasta-like output containing the residue ids",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument(
-        "--sym", help="Print symmetry informations", action="store_true", default=False
-    )
-    parser.add_argument(
-        "--center",
-        help="Recenter the coordinates based on the principal axes",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--coords", help="Print coordinates", action="store_true", default=False
-    )
-    parser.add_argument(
-        "--inter",
-        help="Get chain chain interface map",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument(
+    ),
+    sym: bool = typer.Option(False, "--sym", help="Print symmetry informations"),
+    center: bool = typer.Option(
+        False, "--center", help="Recenter the coordinates based on the principal axes"
+    ),
+    coords: bool = typer.Option(False, "--coords", help="Print coordinates"),
+    inter: bool = typer.Option(
+        False, "--inter", help="Get chain chain interface map"
+    ),
+    aln: bool = typer.Option(
+        False,
         "--aln",
         help="Align pairwisely the sequence of the chains and return the pairwise matrix of sequence identity",
-        action="store_true",
-        default=False,
-    )
-    args = parser.parse_args()
-
-    PDBFILENAME = args.pdb
+    ),
+):
+    PDBFILENAME = pdb
 
     if os.path.exists(PDBFILENAME):
         cmd.load(PDBFILENAME, "inpdb")
     else:
         cmd.fetch(code=PDBFILENAME, name="inpdb")
-    cmd.remove(f"not (inpdb and {args.select})")
-    if args.center:
+    cmd.remove(f"not (inpdb and {select})")
+    if center:
         center_basis()
     chains = cmd.get_chains("inpdb")
     seqs = []
-    resids_per_chain = []
+    resids_per_chain_list = []  # Renamed to avoid conflict with function parameter
     nres_per_chain = []
     natoms_per_chain = []
     seqhashes = []
@@ -489,7 +458,7 @@ if __name__ == "__main__":
             seqs.append(seq)
             resids = get_resids(chain)
             ligands, ligand_names = get_ligands(chain)
-            resids_per_chain.append(resids)
+            resids_per_chain_list.append(resids)
             resid_chunks = get_resid_chunks(resids)
             atomnames = get_atomnames(chain)
             natoms = cmd.select(f"inpdb and chain {chain}")
@@ -497,12 +466,12 @@ if __name__ == "__main__":
             natoms_per_chain.append(natoms)
             print(f"nres={nres}")
             print(f"natoms={natoms}")
-            if args.seq:
+            if seq:
                 print(f"sequence={seq}")
             seqhash = md5sum(seq)
             print(f"seq_hash={seqhash}")
             seqhashes.append(seqhash)
-            if args.resids:
+            if resids:
                 print(f"resids={print_resids(resids)}")
             print(f"resids_chunks={print_chunks(resid_chunks)}")
             if len(ligands) > 0:
@@ -516,7 +485,7 @@ if __name__ == "__main__":
                 )
             print(f"atom_names_hash={md5sum(atomnames)}")
             print(f"selection_string={print_pymol_selection(chain, resid_chunks)}")
-            if args.seqres:
+            if seqres:
                 print(f"sequence=\n{print_resid_seq(seq, resids)}")
         else:
             print("comment: not a polypeptide chain")
@@ -541,16 +510,16 @@ if __name__ == "__main__":
     print(f'polypeptidic_chain_names={",".join(chains)}')
     print(f"n_non_polypeptidic_chains={len(chains_not_prot)}")
     print(f'non_polypeptidic_chain_names={",".join(chains_not_prot)}')
-    if args.sym:
+    if sym:
         print(f"symmetry={get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}")
         common_chunks = print_pymol_selection(
-            None, get_resid_chunks(common_resids(resids_per_chain))
+            None, get_resid_chunks(common_resids(resids_per_chain_list))
         )
         print(f"common_chunks={common_chunks}")  # Common chunks for all chains
-    if args.fasta:
+    if fasta:
         print(f"fasta=\n{get_unique_chains(seqhashes, seqs, chains)}")
-    if args.resids_per_chain:
-        rc = [get_unique_resids(rlist) for rlist in resids_per_chain]
+    if resids_per_chain:
+        rc = [get_unique_resids(rlist) for rlist in resids_per_chain_list]
         rc = [",".join([str(e) for e in rlist]) for rlist in rc]
         print(f'resids=\n{get_unique_chains(seqhashes, rc, chains, label="+ ")}')
     print(f"nres={nres_per_chain.sum()}")
@@ -560,9 +529,9 @@ if __name__ == "__main__":
     print(f"coords_max={' '.join([str(e) for e in coords.max(axis=0)])}")
     boxsize = coords.max(axis=0) - coords.min(axis=0)
     print(f"box_size={' '.join([str(e) for e in boxsize])}")
-    center = coords.mean(axis=0)
-    print(f"box_center={' '.join([str(e) for e in center])}")
-    if args.coords:
+    center_coords = coords.mean(axis=0)
+    print(f"box_center={' '.join([str(e) for e in center_coords])}")
+    if coords:
         coords_str = ""
         for i, xyz in enumerate(coords):
             x, y, z = xyz
@@ -573,18 +542,22 @@ if __name__ == "__main__":
             if i < len(coords) - 1:
                 coords_str += "\n"
         print(f"coords={coords_str}")
-    if args.inter:
+    if inter:
         cmap = chain_chain_interfaces(coords_per_chain)
         print("interfaces: ")
         print(f"+   {' '.join(chains)}")
         for i, line in enumerate(cmap):
             print(f"+ {chains[i]} {' '.join([str(e) for e in line])}")
-    if args.aln:
+    if aln:
         alnmat = align_sequences(seqs)
         print("seq_identity: ")
         print(f"+     {'   '.join(chains)}")
         for i, line in enumerate(alnmat):
             print(f"+ {chains[i]} {' '.join(['%3d'%(e*100) for e in line])}")
-    if args.img:
-        plot_pdb_image(args.pdb)
+    if img:
+        plot_pdb_image(pdb)
     print("--")
+
+
+if __name__ == "__main__":
+    app()
