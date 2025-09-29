@@ -473,15 +473,15 @@ if __name__ == "__main__":
         if chain == "":
             chain = "''"
         print()
-        # print(f'name: {name}')
-        # print(f'filename: {PDBFILENAME}')
-        print(f"chain: {chain}")
+        # print(f'name={name}')
+        # print(f'filename={PDBFILENAME}')
+        print(f"chain={chain}")
         altresids = clean_resids(chain)
         if len(altresids) > 0:
-            print(f'alternate_resids: {",".join(altresids)}')
+            print(f'alternate_resids={",".join(altresids)}')
         altlocs = find_altloc(chain)
         if len(altlocs) > 0:
-            print(f'alternate_locations: {",".join([str(e) for e in altlocs])}')
+            print(f'alternate_locations={",".join([str(e) for e in altlocs])}')
         nres = cmd.select(f"inpdb and polymer.protein and name CA and chain {chain}")
         if nres > 0:
             coords_per_chain.append(cmd.get_coords(f"chain {chain}"))
@@ -496,73 +496,73 @@ if __name__ == "__main__":
             natoms = cmd.select(f"inpdb and chain {chain}")
             nres_per_chain.append(nres)
             natoms_per_chain.append(natoms)
-            print(f"nres: {nres}")
-            print(f"natoms: {natoms}")
+            print(f"nres={nres}")
+            print(f"natoms={natoms}")
             if args.seq:
-                print(f"sequence: {seq}")
+                print(f"sequence={seq}")
             seqhash = md5sum(seq)
-            print(f"seq_hash: {seqhash}")
+            print(f"seq_hash={seqhash}")
             seqhashes.append(seqhash)
             if args.resids:
-                print(f"resids: {print_resids(resids)}")
-            print(f"resids_chunks: {print_chunks(resid_chunks)}")
+                print(f"resids={print_resids(resids)}")
+            print(f"resids_chunks={print_chunks(resid_chunks)}")
             if len(ligands) > 0:
                 ligand_chunks = get_resid_chunks(ligands)
-                print(f'ligand_names: {" ".join(ligand_names)}')
+                print(f'ligand_names={" ".join(ligand_names)}')
                 print(
-                    f'ligand_resids: {" ".join([str(e) for e in numpy.unique(ligands)])}'
+                    f'ligand_resids={" ".join([str(e) for e in numpy.unique(ligands)])}'
                 )
                 print(
-                    f"ligand_selection_string: {print_pymol_selection(chain, ligand_chunks)}"
+                    f"ligand_selection_string={print_pymol_selection(chain, ligand_chunks)}"
                 )
-            print(f"atom_names_hash: {md5sum(atomnames)}")
-            print(f"selection_string: {print_pymol_selection(chain, resid_chunks)}")
+            print(f"atom_names_hash={md5sum(atomnames)}")
+            print(f"selection_string={print_pymol_selection(chain, resid_chunks)}")
             if args.seqres:
-                print(f"sequence:\n{print_resid_seq(seq, resids)}")
+                print(f"sequence=\n{print_resid_seq(seq, resids)}")
         else:
             print("comment: not a polypeptide chain")
             ligands, ligand_names = get_ligands(chain)
             if len(ligands) > 0:
                 ligand_chunks = get_resid_chunks(ligands)
-                print(f'ligand_names: {" ".join(ligand_names)}')
+                print(f'ligand_names={" ".join(ligand_names)}')
                 print(
-                    f'ligand_resids: {" ".join([str(e) for e in numpy.unique(ligands)])}'
+                    f'ligand_resids={" ".join([str(e) for e in numpy.unique(ligands)])}'
                 )
                 print(
-                    f"ligand_selection_string: {print_pymol_selection(chain, ligand_chunks)}"
+                    f"ligand_selection_string={print_pymol_selection(chain, ligand_chunks)}"
                 )
             chains_not_prot.append(chain)
     chains = chains_prot
     print()
-    print(f"name: {name}")
-    print(f"filename: {PDBFILENAME}")
+    print(f"name={name}")
+    print(f"filename={PDBFILENAME}")
     nres_per_chain = numpy.asarray(nres_per_chain)
     natoms_per_chain = numpy.asarray(natoms_per_chain)
-    print(f"n_polypeptidic_chains: {len(chains)}")
-    print(f'polypeptidic_chain_names: {",".join(chains)}')
-    print(f"n_non_polypeptidic_chains: {len(chains_not_prot)}")
-    print(f'non_polypeptidic_chain_names: {",".join(chains_not_prot)}')
+    print(f"n_polypeptidic_chains={len(chains)}")
+    print(f'polypeptidic_chain_names={",".join(chains)}')
+    print(f"n_non_polypeptidic_chains={len(chains_not_prot)}")
+    print(f'non_polypeptidic_chain_names={",".join(chains_not_prot)}')
     if args.sym:
-        print(f"symmetry: {get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}")
+        print(f"symmetry={get_chain_seqmatch(seqhashes, natoms_per_chain, chains)}")
         common_chunks = print_pymol_selection(
             None, get_resid_chunks(common_resids(resids_per_chain))
         )
-        print(f"common_chunks: {common_chunks}")  # Common chunks for all chains
+        print(f"common_chunks={common_chunks}")  # Common chunks for all chains
     if args.fasta:
-        print(f"fasta:\n{get_unique_chains(seqhashes, seqs, chains)}")
+        print(f"fasta=\n{get_unique_chains(seqhashes, seqs, chains)}")
     if args.resids_per_chain:
         rc = [get_unique_resids(rlist) for rlist in resids_per_chain]
         rc = [",".join([str(e) for e in rlist]) for rlist in rc]
-        print(f'resids:\n{get_unique_chains(seqhashes, rc, chains, label="+ ")}')
-    print(f"nres: {nres_per_chain.sum()}")
-    print(f"natoms: {natoms_per_chain.sum()}")
+        print(f'resids=\n{get_unique_chains(seqhashes, rc, chains, label="+ ")}')
+    print(f"nres={nres_per_chain.sum()}")
+    print(f"natoms={natoms_per_chain.sum()}")
     coords = cmd.get_coords("inpdb")
-    print(f"coords_min: {' '.join([str(e) for e in coords.min(axis=0)])}")
-    print(f"coords_max: {' '.join([str(e) for e in coords.max(axis=0)])}")
+    print(f"coords_min={' '.join([str(e) for e in coords.min(axis=0)])}")
+    print(f"coords_max={' '.join([str(e) for e in coords.max(axis=0)])}")
     boxsize = coords.max(axis=0) - coords.min(axis=0)
-    print(f"box_size: {' '.join([str(e) for e in boxsize])}")
+    print(f"box_size={' '.join([str(e) for e in boxsize])}")
     center = coords.mean(axis=0)
-    print(f"box_center: {' '.join([str(e) for e in center])}")
+    print(f"box_center={' '.join([str(e) for e in center])}")
     if args.coords:
         coords_str = ""
         for i, xyz in enumerate(coords):
@@ -573,7 +573,7 @@ if __name__ == "__main__":
                 coords_str += "+ %.3f %.3f %.3f" % (x, y, z)
             if i < len(coords) - 1:
                 coords_str += "\n"
-        print(f"coords: {coords_str}")
+        print(f"coords={coords_str}")
     if args.inter:
         cmap = chain_chain_interfaces(coords_per_chain)
         print("interfaces: ")
