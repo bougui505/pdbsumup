@@ -456,10 +456,10 @@ def main(
             chains_prot.append(chain)
             seq = get_sequence(chain)
             seqs.append(seq)
-            resids = get_resids(chain)
+            current_chain_resids = get_resids(chain)
             ligands, ligand_names = get_ligands(chain)
-            resids_per_chain_list.append(resids)
-            resid_chunks = get_resid_chunks(resids)
+            resids_per_chain_list.append(current_chain_resids)
+            resid_chunks = get_resid_chunks(current_chain_resids)
             atomnames = get_atomnames(chain)
             natoms = cmd.select(f"inpdb and chain {chain}")
             nres_per_chain.append(nres)
@@ -472,7 +472,7 @@ def main(
             print(f"seq_hash={seqhash}")
             seqhashes.append(seqhash)
             if resids:
-                print(f"resids={print_resids(resids)}")
+                print(f"resids={print_resids(current_chain_resids)}")
             print(f"resids_chunks={print_chunks(resid_chunks)}")
             if len(ligands) > 0:
                 ligand_chunks = get_resid_chunks(ligands)
