@@ -1,0 +1,7 @@
+numpy
+scipy
+biopython
+Pillow
+requests
+typer
+pymol-open-source # Note: PyMOL installation can be complex and might require specific environment setup
