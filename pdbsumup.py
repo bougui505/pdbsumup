@@ -524,22 +524,22 @@ def main(
         print(f'resids=\n{get_unique_chains(seqhashes, rc, chains, label="+ ")}')
     print(f"nres={nres_per_chain.sum()}")
     print(f"natoms={natoms_per_chain.sum()}")
-    coords = cmd.get_coords("inpdb")
-    print(f"coords_min={' '.join([str(e) for e in coords.min(axis=0)])}")
-    print(f"coords_max={' '.join([str(e) for e in coords.max(axis=0)])}")
-    boxsize = coords.max(axis=0) - coords.min(axis=0)
+    pdb_coords = cmd.get_coords("inpdb")
+    print(f"coords_min={' '.join([str(e) for e in pdb_coords.min(axis=0)])}")
+    print(f"coords_max={' '.join([str(e) for e in pdb_coords.max(axis=0)])}")
+    boxsize = pdb_coords.max(axis=0) - pdb_coords.min(axis=0)
     print(f"box_size={' '.join([str(e) for e in boxsize])}")
-    center_coords = coords.mean(axis=0)
+    center_coords = pdb_coords.mean(axis=0)
     print(f"box_center={' '.join([str(e) for e in center_coords])}")
-    if coords:
+    if coords:  # This `coords` is the Typer boolean option
         coords_str = ""
-        for i, xyz in enumerate(coords):
+        for i, xyz in enumerate(pdb_coords):
             x, y, z = xyz
             if i == 0:
                 coords_str += "%.3f %.3f %.3f" % (x, y, z)
             else:
                 coords_str += "+ %.3f %.3f %.3f" % (x, y, z)
-            if i < len(coords) - 1:
+            if i < len(pdb_coords) - 1:
                 coords_str += "\n"
         print(f"coords={coords_str}")
     if inter:
