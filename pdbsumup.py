@@ -376,7 +376,9 @@ def center_basis():
     cmd.load_coords(coords, "inpdb")
 
 
-app = typer.Typer(help="Get a sum up for a Protein structure file (e.g. pdb file)")
+app = typer.Typer(
+    help="Summarize Protein Data Bank (PDB) structures, providing details on chains, sequences, residue IDs, symmetry, interfaces, and more."
+)
 
 
 @app.command()
