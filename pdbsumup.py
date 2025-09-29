@@ -472,7 +472,7 @@ if __name__ == "__main__":
     for chain in chains:
         if chain == "":
             chain = "''"
-        print()
+        print("--")
         # print(f'name={name}')
         # print(f'filename={PDBFILENAME}')
         print(f"chain={chain}")
@@ -533,7 +533,7 @@ if __name__ == "__main__":
                 )
             chains_not_prot.append(chain)
     chains = chains_prot
-    print()
+    print("--")
     print(f"name={name}")
     print(f"filename={PDBFILENAME}")
     nres_per_chain = numpy.asarray(nres_per_chain)
