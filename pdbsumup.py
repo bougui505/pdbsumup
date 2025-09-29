@@ -315,8 +315,7 @@ def get_unique_chains(seqhashes, seqs, chains, label="+ ", linewidth=80):
         outfasta += " ".join(chains)
         outfasta += f"\n{label}"
         seqstring = sequniq[h]
-        seqwrap = textwrap.wrap(seqstring, linewidth)
-        outfasta += f"\n{label}".join(seqwrap)
+        outfasta += seqstring
         outfasta += "\n"
     return outfasta
 
