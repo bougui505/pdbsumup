@@ -454,8 +454,8 @@ def main(
         if nres > 0:
             coords_per_chain.append(cmd.get_coords(f"chain {chain}"))
             chains_prot.append(chain)
-            seq = get_sequence(chain)
-            seqs.append(seq)
+            protein_sequence = get_sequence(chain)
+            seqs.append(protein_sequence)
             current_chain_resids = get_resids(chain)
             ligands, ligand_names = get_ligands(chain)
             resids_per_chain_list.append(current_chain_resids)
@@ -466,9 +466,9 @@ def main(
             natoms_per_chain.append(natoms)
             print(f"nres={nres}")
             print(f"natoms={natoms}")
-            if seq:
-                print(f"sequence={seq}")
-            seqhash = md5sum(seq)
+            if seq:  # This `seq` is the Typer boolean option
+                print(f"sequence={protein_sequence}")
+            seqhash = md5sum(protein_sequence)
             print(f"seq_hash={seqhash}")
             seqhashes.append(seqhash)
             if resids:
@@ -486,7 +486,7 @@ def main(
             print(f"atom_names_hash={md5sum(atomnames)}")
             print(f"selection_string={print_pymol_selection(chain, resid_chunks)}")
             if seqres:
-                print(f"sequence=\n{print_resid_seq(seq, current_chain_resids)}")
+                print(f"sequence=\n{print_resid_seq(protein_sequence, current_chain_resids)}")
         else:
             print("comment: not a polypeptide chain")
             ligands, ligand_names = get_ligands(chain)
