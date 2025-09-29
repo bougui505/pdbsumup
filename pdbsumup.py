@@ -383,41 +383,43 @@ app = typer.Typer(
 
 @app.command()
 def main(
-    pdb: str = typer.Argument(..., help="Protein structure file"),
+    pdb: str = typer.Argument(..., help="Path to a PDB/CIF file or a PDB ID (e.g., '1kv1')."),
     img: bool = typer.Option(
         False,
         "--img",
-        help="Display protein image from the pdb for the assymetric unit. Only working if a pdbcode is given in pdb argument.",
+        help="Display an image of the PDB entry from rcsb.org. Only works if a valid PDB ID is provided.",
     ),
-    select: str = typer.Option("all", "--select", help="Select part of the structure"),
-    seq: bool = typer.Option(False, "-s", "--seq", help="Print the sequence"),
+    select: str = typer.Option(
+        "all", "--select", help="Pymol selection string to filter parts of the structure (e.g., 'chain A')."
+    ),
+    seq: bool = typer.Option(False, "-s", "--seq", help="Print the amino acid sequence for each polypeptide chain."),
     resids: bool = typer.Option(
-        False, "-r", "--resids", help="Print the residue ids for each chain"
+        False, "-r", "--resids", help="Print a semicolon-separated list of residue IDs for each polypeptide chain."
     ),
     seqres: bool = typer.Option(
-        False, "-sr", "--seqres", help="Print the sequence along with the residue ids"
+        False, "-sr", "--seqres", help="Print the amino acid sequence along with corresponding residue IDs for each polypeptide chain."
     ),
     fasta: bool = typer.Option(
-        False, "-f", "--fasta", help="Return a fasta file with the unique sequences"
+        False, "-f", "--fasta", help="Output unique polypeptide sequences in FASTA format."
     ),
     resids_per_chain: bool = typer.Option(
         False,
         "-rc",
         "--resids-per-chain",
-        help="Return a fasta-like output containing the residue ids",
+        help="Output unique residue ID lists per chain in a FASTA-like format.",
     ),
-    sym: bool = typer.Option(False, "--sym", help="Print symmetry informations"),
+    sym: bool = typer.Option(False, "--sym", help="Print symmetry information, including RMSD and transformation details for identical chains."),
     center: bool = typer.Option(
-        False, "--center", help="Recenter the coordinates based on the principal axes"
+        False, "--center", help="Recenter the structure coordinates based on its principal axes of inertia."
     ),
-    coords: bool = typer.Option(False, "--coords", help="Print coordinates"),
+    coords: bool = typer.Option(False, "--coords", help="Print the XYZ coordinates of all atoms in the structure."),
     inter: bool = typer.Option(
-        False, "--inter", help="Get chain chain interface map"
+        False, "--inter", help="Display a contact map indicating interfaces between polypeptide chains."
     ),
     aln: bool = typer.Option(
         False,
         "--aln",
-        help="Align pairwisely the sequence of the chains and return the pairwise matrix of sequence identity",
+        help="Display a pairwise sequence identity matrix for all polypeptide chains.",
     ),
 ):
     PDBFILENAME = pdb
