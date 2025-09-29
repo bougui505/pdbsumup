@@ -18,7 +18,7 @@ import requests
 import numpy as np
 
 cmd.set("fetch_path", os.path.expanduser("~/pdb"))
-cmd.set("fetch_type_default", "mmtf")
+cmd.set("fetch_type_default", "cif")
 
 
 def plot_pdb_image(pdbcode):
